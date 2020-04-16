@@ -233,7 +233,7 @@ class SearchForm extends Component {
                                     color="#0279AC"
                                 />
                                 <Input
-                                    placeholder="First Middle Last Name"
+                                    placeholder="First, Middle, Last Name"
                                     placeholderTextColor="rgba(24,23,21,.5)"
                                     style={styles.textInput}
                                     value={this.state.name}
@@ -277,6 +277,11 @@ class SearchForm extends Component {
                         style={[{ flex: 0 }]}
                     >
                         <View style={styles.searchBar}>
+                            <Ionicons
+                                name="md-mail"
+                                size={32}
+                                color="#0279AC"
+                            />
                             <SearchBar
                                 placeholder="Email Address"
                                 placeholderTextColor="rgba(24,23,21,.5)"
