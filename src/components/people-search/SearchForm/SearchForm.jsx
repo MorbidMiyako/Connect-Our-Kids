@@ -227,6 +227,11 @@ class SearchForm extends Component {
                     >
                         <View style={styles.nameInputFullWidth}>
                             <View style={styles.peopleSearch}>
+                                <Ionicons
+                                    name="md-person"
+                                    size={32}
+                                    color="#0279AC"
+                                />
                                 <Input
                                     placeholder="First Middle Last Name"
                                     placeholderTextColor="rgba(24,23,21,.5)"
@@ -240,6 +245,11 @@ class SearchForm extends Component {
                                 />
                             </View>
                             <View style={styles.peopleSearch}>
+                                <Ionicons
+                                    name="md-map"
+                                    size={32}
+                                    color="#0279AC"
+                                />
                                 <Input
                                     placeholder="City, State (Optional)"
                                     placeholderTextColor="rgba(24,23,21,.5)"
