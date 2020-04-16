@@ -277,11 +277,6 @@ class SearchForm extends Component {
                         style={[{ flex: 0 }]}
                     >
                         <View style={styles.searchBar}>
-                            <Ionicons
-                                name="md-mail"
-                                size={32}
-                                color="#0279AC"
-                            />
                             <SearchBar
                                 placeholder="Email Address"
                                 placeholderTextColor="rgba(24,23,21,.5)"
