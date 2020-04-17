@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderStyle: 'solid',
         borderRadius: 4,
-        width: '75%',
+        width: '85%',
         marginTop: 45,
         marginRight: 12,
         marginLeft: 12,
