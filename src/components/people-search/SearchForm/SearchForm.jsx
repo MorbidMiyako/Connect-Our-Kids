@@ -233,7 +233,7 @@ class SearchForm extends Component {
                                     color="#0279AC"
                                 />
                                 <Input
-                                    placeholder="First, Middle, Last Name"
+                                    placeholder="First Middle Last Name"
                                     placeholderTextColor="rgba(24,23,21,.5)"
                                     style={styles.textInput}
                                     value={this.state.name}
