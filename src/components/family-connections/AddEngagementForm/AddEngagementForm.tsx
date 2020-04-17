@@ -6,6 +6,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     TextInput,
+    Modal,
+    TouchableHighlight
 } from 'react-native';
 import constants from '../../../helpers/constants';
 import { connect } from 'react-redux';
@@ -16,6 +18,7 @@ import {
     createCallEngagement,
     createEmailEngagement,
 } from '../../../store/actions';
+// import EngagementFormModal from "./EngagementFormModal"
 
 const styles = StyleSheet.create({
     formContainer: {
@@ -43,6 +46,16 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         color: '#fff',
     },
+    modal: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'gray',
+        padding: 100
+     },
+     text: {
+        color: '#3f2949',
+        marginTop: 10
+     }
 });
 
 const getTitle = (dataType: AddEngagementFormEngagementTypes): string => {
@@ -103,7 +116,10 @@ const AddEngagementForm = (props: Props) => {
     const [note, setNote] = useState('');
     const [subject, setSubject] = useState(null);
     const [isPublic] = useState(true);
-
+    const [toggleModal, setToggleModal] = useState(false)
+    const toggle = () => {
+        setToggleModal(!toggleModal)
+      }
     const createEngagement = () => {
         switch (props.engagementType) {
             case 'EngagementCall':
@@ -237,11 +253,24 @@ const AddEngagementForm = (props: Props) => {
                             style={styles.saveButton}
                             onPress={() => {
                                 createEngagement();
-                                props.navigation.goBack();
+                                toggle();
+                                //MODAL TOGGLE GOES HERE FOR WHEN ENGAGEMENT IS SAVED
                             }}
                         >
                             <Text style={styles.buttonText}>SAVE</Text>
                         </TouchableOpacity>
+                        <Modal animationType = {"slide"} transparent = {true}
+          visible = {toggleModal}
+          onRequestClose = {() => { console.log("Modal has been closed.") } }> 
+          <View style = {styles.modal}>
+             <Text style = {styles.text}>Modal is open!</Text>
+             <TouchableHighlight onPress = {() => {
+                toggle()
+                props.navigation.goBack();}}>
+                <Text style = {styles.text}>Close Modal</Text>
+             </TouchableHighlight>
+          </View> 
+       </Modal>
                     </View>
                 </View>
             </View>
