@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
 const getTitle = (dataType: AddEngagementFormEngagementTypes): string => {
     switch (dataType) {
         case 'EngagementCall':
-            return 'LOG CALL';
+            return 'Log Call';
         case 'EngagementEmail':
-            return 'LOG Email';
+            return 'Log Email';
         case 'EngagementNote':
-            return 'ADD NOTE';
+            return 'Add Note';
         default:
             throw new Error(`Unsupported engagement type: ${dataType}`);
     }
@@ -62,9 +62,9 @@ const dataTypePlaceholder = (
     dataType: AddEngagementFormEngagementTypes
 ): string => {
     if (dataType === 'EngagementEmail') {
-        return 'ADD EMAIL';
+        return 'Add Email';
     } else {
-        return 'ADD NOTE';
+        return 'Add Note';
     }
 };
 
