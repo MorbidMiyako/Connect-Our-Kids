@@ -20,6 +20,7 @@ import {
 const styles = StyleSheet.create({
     formContainer: {
         width: '95%',
+        height: "70%",
         // padding: 4,
         marginTop: 10,
         flexDirection: 'column',
@@ -173,7 +174,7 @@ const AddEngagementForm = (props: Props) => {
                             onChangeText={(text) => {
                                 setSubject(text);
                             }}
-                            placeholder="SUBJECT"
+                            placeholder="Subject"
                             placeholderTextColor={'#AAA9AD'}
                             style={{ padding: 4, fontSize: 15 }}
                             textAlignVertical="top"
