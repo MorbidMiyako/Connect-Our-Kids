@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Button } from 'react-native';
+import { Image, View, TouchableOpacity, Text } from 'react-native';
 import {
     createAppContainer,
     createSwitchNavigator,
@@ -21,6 +21,7 @@ import logoImg from '../../assets/logo.png';
 import MoreScreen from '../screens/MoreScreen';
 import AddEngagementForm from '../components/family-connections/AddEngagementForm/AddEngagementForm';
 import styles from '../components/family-connections/Attachment/styles';
+
 // This is the primary NAVIGATION file. Everything in this file determines how to navigate around through the Bottom Navbar and "More" Drawer.
 // If you add new screens into the app, you'll need to add them into the appropriate stacks below in order for React Navigation to know how to route the user.
 // refer to React navigation docs for more details: https://reactnavigation.org/docs/en/bottom-tab-navigator.html
@@ -38,16 +39,23 @@ const topLevelScreenNavigationOptions: NavigationScreenConfig<
     // eslint-disable-next-line react/display-name
     headerTitle: () => (
         <View style={styles.headerStyles}>
-            <View style={styles.headerImgView}>
-                <Image
-                    style={styles.headerImgStyles}
-                    source={logoImg}
-                    resizeMode="contain"
-                />
-            </View>
-            <View style={styles.headerBtnView}>
-                <Button style={styles.addCaseBtn} title="+ Add Case"></Button>
-            </View>
+            <Image
+                style={styles.headerImgStyles}
+                source={logoImg}
+                resizeMode="contain"
+            />
+            <TouchableOpacity
+                style={styles.headerBtnView}
+                activeOpacity={0.6}
+                onPress={() => {
+                    alert(
+                        'You have clicked the button, hoorah! Eventually this will lead to a screen where you can Add a New Case.'
+                    );
+                }}
+            >
+                <Ionicons name="md-add" size={24} color="white" />
+                <Text style={styles.addCaseText}> Add Case </Text>
+            </TouchableOpacity>
         </View>
     ),
 };

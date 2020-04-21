@@ -4,15 +4,25 @@ export default StyleSheet.create({
     headerStyles: {
         display: 'flex',
         flexDirection: 'row',
+        flexWrap: 'wrap',
+
+        justifyContent: 'center',
     },
-    headerImgView: {},
     headerImgStyles: {
         width: 240,
         height: 90,
     },
     headerBtnView: {
-        justifyContent: 'center',
-        height: 100,
+        padding: 5,
+        backgroundColor: '#0279AC',
+        flexDirection: 'row',
+        marginTop: 30,
+        marginLeft: 20,
+        marginBottom: 30,
+        borderRadius: 20,
     },
-    addCaseBtn: {},
+    addCaseText: {
+        color: 'white',
+        fontSize: 17,
+    },
 });
