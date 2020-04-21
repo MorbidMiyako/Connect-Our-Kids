@@ -20,7 +20,6 @@ import {
 const styles = StyleSheet.create({
     formContainer: {
         width: '95%',
-        height: "70%",
         // padding: 4,
         marginTop: 10,
         flexDirection: 'column',
@@ -35,7 +34,7 @@ const styles = StyleSheet.create({
         height: 36,
         borderRadius: 50,
         borderWidth: 1,
-        marginTop: 20,
+        marginTop: 5,
         backgroundColor: constants.highlightColor,
         borderColor: constants.highlightColor,
     },
@@ -184,8 +183,8 @@ const AddEngagementForm = (props: Props) => {
                 ) : null}
                 <View
                     style={{
-                        height: 165,
-                        marginBottom: 5,
+                        height: 400,
+                        marginVertical: 10,
                         width: '100%',
                         backgroundColor: 'white',
                         borderRadius: 4,
@@ -214,7 +213,6 @@ const AddEngagementForm = (props: Props) => {
                 <View
                     style={{
                         width: '100%',
-                        marginTop: 20,
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         alignItems: 'flex-start',
@@ -231,7 +229,6 @@ const AddEngagementForm = (props: Props) => {
                         style={{
                             width: '100%',
                             alignItems: 'flex-end',
-                            marginTop: 20,
                         }}
                     >
                         <TouchableOpacity
