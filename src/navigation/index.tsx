@@ -20,7 +20,7 @@ import AddDocumentForm from '../components/family-connections/AddDocumentForm';
 import logoImg from '../../assets/logo.png';
 import MoreScreen from '../screens/MoreScreen';
 import AddEngagementForm from '../components/family-connections/AddEngagementForm/AddEngagementForm';
-import styles from '../components/family-connections/Attachment/styles';
+import styles from './styles';
 
 // This is the primary NAVIGATION file. Everything in this file determines how to navigate around through the Bottom Navbar and "More" Drawer.
 // If you add new screens into the app, you'll need to add them into the appropriate stacks below in order for React Navigation to know how to route the user.
