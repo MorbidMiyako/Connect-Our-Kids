@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, View, Button } from 'react-native';
 import {
     createAppContainer,
     createSwitchNavigator,
@@ -20,7 +20,7 @@ import AddDocumentForm from '../components/family-connections/AddDocumentForm';
 import logoImg from '../../assets/logo.png';
 import MoreScreen from '../screens/MoreScreen';
 import AddEngagementForm from '../components/family-connections/AddEngagementForm/AddEngagementForm';
-
+import styles from '../components/family-connections/Attachment/styles';
 // This is the primary NAVIGATION file. Everything in this file determines how to navigate around through the Bottom Navbar and "More" Drawer.
 // If you add new screens into the app, you'll need to add them into the appropriate stacks below in order for React Navigation to know how to route the user.
 // refer to React navigation docs for more details: https://reactnavigation.org/docs/en/bottom-tab-navigator.html
@@ -37,11 +37,18 @@ const topLevelScreenNavigationOptions: NavigationScreenConfig<
     },
     // eslint-disable-next-line react/display-name
     headerTitle: () => (
-        <Image
-            source={logoImg}
-            style={{ width: 225, height: 90 }}
-            resizeMode="contain"
-        />
+        <View style={styles.headerStyles}>
+            <View style={styles.headerImgView}>
+                <Image
+                    style={styles.headerImgStyles}
+                    source={logoImg}
+                    resizeMode="contain"
+                />
+            </View>
+            <View style={styles.headerBtnView}>
+                <Button style={styles.addCaseBtn} title="+ Add Case"></Button>
+            </View>
+        </View>
     ),
 };
 
