@@ -151,7 +151,7 @@ export interface AddEngagementFormParams {
 
 const AddEngagementForm = (props: Props) => {
     const [note, setNote] = useState('');
-    const [subject, setSubject] = useState(null);
+    const [subject, setSubject] = useState('');
     const [isPublic] = useState(true);
     const [toggleErrorModal, setErrorToggleModal] = useState(false)
 
@@ -335,7 +335,11 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         throw new Error(`Unsupported engagement type: ${engagementType}`);
     }
 
-    const caseId = state.case.results?.details.id;
+    const caseId = state.case.results?.details?.id;
+    if (!caseId) {
+        throw new Error(`No case id specified`);
+    }
+
     return {
         caseId,
         relationshipId,
