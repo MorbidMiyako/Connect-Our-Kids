@@ -44,6 +44,27 @@ const topLevelScreenNavigationOptions: NavigationScreenConfig<
                 source={logoImg}
                 resizeMode="contain"
             />
+        </View>
+    ),
+};
+
+// use this on the top level screen with Add Case Button (Family Connections)
+const topLevelScreenNavigationOptions2: NavigationScreenConfig<
+    Record<string, unknown>,
+    unknown
+> = {
+    headerStyle: {
+        height: constants.headerHeight,
+        backgroundColor: constants.backgroundColor,
+    },
+    // eslint-disable-next-line react/display-name
+    headerTitle: () => (
+        <View style={styles.headerStyles}>
+            <Image
+                style={styles.headerImgStyles}
+                source={logoImg}
+                resizeMode="contain"
+            />
             <TouchableOpacity
                 style={styles.headerBtnView}
                 activeOpacity={0.6}
@@ -82,7 +103,7 @@ const subLevelScreenNavigationOptions: NavigationScreenConfig<
 const FamilyConnectionsNavigator = createStackNavigator({
     FamilyConnections: {
         screen: FamilyConnectionsScreen,
-        navigationOptions: topLevelScreenNavigationOptions,
+        navigationOptions: topLevelScreenNavigationOptions2,
     },
     CaseView: {
         screen: CaseScreen,
