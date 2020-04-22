@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, Platform } from 'react-native';
 import {
     createAppContainer,
     createSwitchNavigator,
@@ -55,12 +55,14 @@ const subLevelScreenNavigationOptions: NavigationScreenConfig<
         height: constants.headerHeight,
         backgroundColor: constants.backgroundColor,
     },
-    headerBackTitleStyle: {
-        color: constants.highlightColor,
-    },
     headerTitleStyle: {
-        display: 'none',
+        color: constants.highlightColor,
+        fontSize: 17,
+        margin: 0,
+        padding: 0,
+        fontWeight: '100',
     },
+    headerTitleAlign: 'left',
 };
 
 // Following StackNavigators are in BottomNav:
@@ -73,13 +75,15 @@ const FamilyConnectionsNavigator = createStackNavigator({
         screen: CaseScreen,
         navigationOptions: {
             ...subLevelScreenNavigationOptions,
-            headerBackTitle: 'Back to Cases',
+            headerTitle: Platform.OS === 'android' ? 'Back to Cases' : '',
+            headerBackTitle: Platform.OS === 'android' ? ' ' : 'Back to Cases',
         },
     },
     RelationshipScreen: {
         screen: RelationshipScreen,
         navigationOptions: {
             ...subLevelScreenNavigationOptions,
+            headerTitle: Platform.OS === 'android' ? 'Back to Case' : '',
             headerBackTitle: 'Back to Case',
         },
     },
@@ -87,6 +91,7 @@ const FamilyConnectionsNavigator = createStackNavigator({
         screen: AddEngagementForm,
         navigationOptions: {
             ...subLevelScreenNavigationOptions,
+            headerTitle: Platform.OS === 'android' ? 'Back to Connection' : '',
             headerBackTitle: 'Back to Connection',
         },
     },
@@ -94,6 +99,7 @@ const FamilyConnectionsNavigator = createStackNavigator({
         screen: AddDocumentForm,
         navigationOptions: {
             ...subLevelScreenNavigationOptions,
+            headerTitle: Platform.OS === 'android' ? 'Back to Connection' : '',
             headerBackTitle: 'Back to Connection',
         },
     },
@@ -108,6 +114,7 @@ const PeopleSearchNavigator = createStackNavigator({
         screen: SearchResultScreen,
         navigationOptions: {
             ...subLevelScreenNavigationOptions,
+            headerTitle: Platform.OS === 'android' ? 'Back to Search' : '',
             headerBackTitle: 'Back to Search',
         },
     },
@@ -124,6 +131,8 @@ const CustomDrawerNavigator = createStackNavigator({
         screen: AuthenticationView,
         navigationOptions: {
             ...subLevelScreenNavigationOptions,
+            headerTitle: Platform.OS === 'android' ? 'Back' : '',
+
             headerBackTitle: 'Back',
         },
     },
@@ -133,6 +142,7 @@ const CustomDrawerNavigator = createStackNavigator({
         navigationOptions: {
             ...subLevelScreenNavigationOptions,
             headerBackTitle: 'Back',
+            headerTitle: Platform.OS === 'android' ? 'Back' : '',
         },
     },
 });
