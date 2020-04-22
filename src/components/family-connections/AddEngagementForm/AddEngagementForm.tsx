@@ -142,7 +142,7 @@ const AddEngagementForm = (props: Props) => {
                 width: '100%',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
-                backgroundColor: '#E5E4E2',
+                backgroundColor: constants.backgroundColor,
                 height: '100%',
             }}
         >
@@ -151,11 +151,12 @@ const AddEngagementForm = (props: Props) => {
                     style={{
                         width: '100%',
                         alignItems: 'flex-start',
-                        marginTop: 7,
-                        marginBottom: 13,
+                        marginTop: 12,
+                        marginBottom: 25,
+                        paddingLeft: 15,
                     }}
                 >
-                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                    <Text style={{ fontSize: 17.5 }}>
                         {getTitle(props.engagementType)}
                     </Text>
                 </View>
@@ -164,9 +165,12 @@ const AddEngagementForm = (props: Props) => {
                         style={{
                             minHeight: 25,
                             marginBottom: 5,
-                            width: '100%',
+                            width: '95%',
                             backgroundColor: 'white',
                             borderRadius: 4,
+                            paddingLeft: 10,
+                            borderWidth: 0.5,
+                            borderColor: constants.borderColor,
                         }}
                     >
                         <TextInput
@@ -183,10 +187,12 @@ const AddEngagementForm = (props: Props) => {
                 ) : null}
                 <View
                     style={{
-                        height: 400,
+                        height: 350,
                         marginVertical: 10,
-                        width: '100%',
+                        width: '95%',
                         backgroundColor: 'white',
+                        borderWidth: 0.5,
+                        borderColor: constants.borderColor,
                         borderRadius: 4,
                     }}
                 >
@@ -199,7 +205,7 @@ const AddEngagementForm = (props: Props) => {
                         placeholder={dataTypePlaceholder(props.engagementType)}
                         placeholderTextColor={'#AAA9AD'}
                         style={{
-                            padding: 4,
+                            padding: 10,
                             width: '100%',
                             height: '100%',
                             fontSize: 15,
@@ -229,6 +235,7 @@ const AddEngagementForm = (props: Props) => {
                         style={{
                             width: '100%',
                             alignItems: 'flex-end',
+                            marginTop: 12,
                         }}
                     >
                         <TouchableOpacity
