@@ -21,6 +21,7 @@ import logoImg from '../../assets/logo.png';
 import MoreScreen from '../screens/MoreScreen';
 import AddEngagementForm from '../components/family-connections/AddEngagementForm/AddEngagementForm';
 import styles from './styles';
+import AddCaseScreen from '../screens/AddCaseScreen';
 
 // This is the primary NAVIGATION file. Everything in this file determines how to navigate around through the Bottom Navbar and "More" Drawer.
 // If you add new screens into the app, you'll need to add them into the appropriate stacks below in order for React Navigation to know how to route the user.
@@ -58,7 +59,7 @@ const topLevelScreenNavigationOptions2: NavigationScreenConfig<
         backgroundColor: constants.backgroundColor,
     },
     // eslint-disable-next-line react/display-name
-    headerTitle: () => (
+    headerTitle: (props) => (
         <View style={styles.headerStyles}>
             <Image
                 style={styles.headerImgStyles}
@@ -68,11 +69,7 @@ const topLevelScreenNavigationOptions2: NavigationScreenConfig<
             <TouchableOpacity
                 style={styles.headerBtnView}
                 activeOpacity={0.6}
-                onPress={() => {
-                    alert(
-                        'You have clicked the button, hoorah! Eventually this will lead to a screen where you can Add a New Case.'
-                    );
-                }}
+                onPress={() => console.log('clicked')}
             >
                 <Ionicons name="md-add" size={24} color="white" />
                 <Text style={styles.addCaseText}> Add Case </Text>
