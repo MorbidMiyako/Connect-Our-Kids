@@ -14,7 +14,6 @@ export default StyleSheet.create({
     },
     headerBtnView: {
         padding: 5,
-        backgroundColor: '#0279AC',
         flexDirection: 'row',
         marginTop: 30,
         marginLeft: 20,
@@ -22,7 +21,7 @@ export default StyleSheet.create({
         borderRadius: 20,
     },
     addCaseText: {
-        color: 'white',
+        color: '#0279AC',
         fontSize: 17,
     },
 });

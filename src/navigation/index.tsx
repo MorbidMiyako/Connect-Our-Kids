@@ -71,7 +71,7 @@ const topLevelScreenNavigationOptions2: NavigationScreenConfig<
                 activeOpacity={0.6}
                 onPress={() => console.log('clicked')}
             >
-                <Ionicons name="md-add" size={24} color="white" />
+                <Ionicons name="md-add" size={24} color="#0279AC" />
                 <Text style={styles.addCaseText}> Add Case </Text>
             </TouchableOpacity>
         </View>
