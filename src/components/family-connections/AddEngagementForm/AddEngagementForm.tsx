@@ -62,9 +62,9 @@ const dataTypePlaceholder = (
     dataType: AddEngagementFormEngagementTypes
 ): string => {
     if (dataType === 'EngagementEmail') {
-        return 'Add Email';
+        return 'Your email notes...';
     } else {
-        return 'Add Note';
+        return 'Your notes...';
     }
 };
 
