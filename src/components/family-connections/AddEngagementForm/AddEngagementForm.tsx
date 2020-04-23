@@ -11,7 +11,10 @@ import {
 import constants from '../../../helpers/constants';
 import { connect } from 'react-redux';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import RelationshipListItem from '../CaseList';
 import { RootState } from '../../../store/reducers';
+import { RelationshipDetailFullFragment } from '../../../generated/RelationshipDetailFullFragment';
+
 import {
     createNoteEngagement,
     createCallEngagement,
@@ -89,6 +92,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#E5E4E2',
         height: '100%',
     },
+    avatarName: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        paddingBottom: '10%',
+        paddingTop: 5,
+        paddingLeft: 5,
+        width: '100%',
+    },
 });
 
 const getTitle = (dataType: AddEngagementFormEngagementTypes): string => {
@@ -117,6 +128,7 @@ const dataTypePlaceholder = (
 interface StateProps {
     caseId: number;
     relationshipId: number;
+    relationship: RelationshipDetailFullFragment;
     engagementType: AddEngagementFormEngagementTypes;
     engagementErrorToggle: boolean;
     isLoadingEngagements: boolean;
@@ -202,6 +214,11 @@ const AddEngagementForm = (props: Props) => {
                     : {},
             ]}
         >
+            <View style={{ width: '100%' }}>
+                <View style={styles.avatarName}>
+                    <RelationshipListItem relationship={props.relationship} />
+                </View>
+            </View>
             <View style={[styles.formContainer]}>
                 <View
                     style={{
@@ -346,7 +363,9 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     const relationshipId = ownProps.navigation.getParam(
         'relationshipId'
     ) as number;
-
+    const relationship = ownProps.navigation.getParam(
+        'relationship'
+    ) as RelationshipDetailFullFragment;
     // passed in parameter on navigate
     const engagementType = ownProps.navigation.getParam(
         'engagementType'
@@ -371,6 +390,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     return {
         caseId,
         relationshipId,
+        relationship,
         engagementType,
         engagementErrorToggle,
         isLoadingEngagements,

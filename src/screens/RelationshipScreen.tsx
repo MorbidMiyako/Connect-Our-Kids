@@ -183,6 +183,7 @@ function RelationshipScreen(props: Props): JSX.Element {
         return props.navigation.navigate('AddEngagementForm', {
             engagementType: type,
             relationshipId: props.relationshipId,
+            relationship: props.relationship,
             caseId: props.caseId,
         } as AddEngagementFormParams);
     };
