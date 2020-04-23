@@ -404,7 +404,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                                             </TouchableOpacity>
                                         </View>
                                         <Text style={styles.iconLabel}>
-                                            ADD NOTE
+                                            Add Note
                                         </Text>
                                     </View>
 
@@ -431,7 +431,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                                             </TouchableOpacity>
                                         </View>
                                         <Text style={styles.iconLabel}>
-                                            LOG CALL
+                                            Log Call
                                         </Text>
                                     </View>
 
@@ -451,7 +451,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                                             </TouchableOpacity>
                                         </View>
                                         <Text style={styles.iconLabel}>
-                                            LOG EMAIL
+                                            Log Email
                                         </Text>
                                     </View>
                                 </View>
