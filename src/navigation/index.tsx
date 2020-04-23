@@ -63,6 +63,9 @@ const subLevelScreenNavigationOptions: NavigationScreenConfig<
         fontWeight: '100',
     },
     headerTitleAlign: 'left',
+    headerTitleContainerStyle: {
+        left: 50,
+    },
 };
 
 // Following StackNavigators are in BottomNav:
