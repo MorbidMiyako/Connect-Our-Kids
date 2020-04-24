@@ -1,7 +1,7 @@
 # Workspace & local settings
 # .vscode/settings.json
 .expo/
-
+.DS_Store
 # Logs
 logs
 *.log
@@ -117,3 +117,7 @@ dist
 # Apollo Graphql generated files
 src/generated/
 build
+
+# VSCode configuration
+.vscode/.react
+.vscode/launch.json

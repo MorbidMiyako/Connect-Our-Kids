@@ -18,12 +18,7 @@ import { ListItem, Image, SearchBar, CheckBox } from 'react-native-elements';
 // redux
 import { connect } from 'react-redux';
 
-import {
-    getCases,
-    setUserCreds,
-    setModalVisible,
-    authChecker,
-} from '../store/actions';
+import { getCases, login } from '../store/actions';
 
 // constants = like a config variable
 import constants from '../helpers/constants';
@@ -46,12 +41,12 @@ import {
     casesDetailSlim_cases,
     casesDetailSlim_cases_person,
 } from '../generated/casesDetailSlim';
+import { AuthState } from '../store/reducers/authReducer';
 // unicode arrow
 const leftArrow = '\u2190';
 
 interface StateProps {
-    accessToken: string;
-    loadingUser: boolean;
+    auth: AuthState;
     cases: casesDetailSlim_cases[];
     isLoadingCases: boolean;
     casesError?: string;
@@ -59,9 +54,7 @@ interface StateProps {
 
 interface DispatchProps {
     getCases: typeof getCases;
-    setUserCreds: typeof setUserCreds;
-    setModalVisible: typeof setModalVisible;
-    authChecker: typeof authChecker;
+    login: typeof login;
 }
 
 type Navigation = NavigationScreenProp<NavigationState>;
@@ -72,7 +65,6 @@ interface OwnProps {
 
 type Props = StateProps & DispatchProps & OwnProps;
 
-// this is like a local "store" -- used to initialize some state values, accessed in [state] hook
 const FamilyConnectionsScreen = (props: Props): JSX.Element => {
     const styles = StyleSheet.create({
         safeAreaView: {
@@ -103,6 +95,7 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
         },
     });
 
+    // this is like a local "store" -- used to initialize some state values, accessed in [state] hook
     const initialState = {
         searchKeywords: '',
         gender: 'Gender',
@@ -135,35 +128,25 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
     const [sort, setSort] = useState('Full Name'); // sort results of Family Connections, can be changed to several other values
     const [rtn, setRtn] = useState('RETURN'); // MIGHT display "RETURN" next to a return arrow in iOS modals; also exists in the CaseView component
 
-    const genderAssignment = (gender) => {
-        // also exists in the CaseView component
-        if (gender === 'M') {
-            return 'Male';
-        } else if (gender === 'F') {
-            return 'Female';
-        } else if (gender === 'O') {
-            return '';
-        } else {
-            return '';
-        }
-    };
-
     // run this once
     useEffect(() => {
         Platform.OS === 'android' ? setRtn('') : null; // if Android, display no "RETURN" text, otherwise do nothing => probs better written as Platform.OS === 'android' && setRtn('')
     }, []);
 
-    // run any time there a change to user loading
+    // run once
+    /*
     useEffect(() => {
-        props.authChecker();
-    }, [props.loadingUser, props.accessToken]);
-
-    // run any time the token changes
+        console.log('useEffect auth checker - family connections');
+        props.login(true);
+    }, []);
+*/
+    // run any time the logged in status changes
     useEffect(() => {
-        if (props.accessToken) {
+        if (props.auth.isLoggedIn && !props.auth.isLoggingIn) {
+            console.log('Logged in with token');
             props.getCases();
         }
-    }, [props.accessToken]);
+    }, [props.auth.isLoggedIn, props.auth.isLoggingIn]);
 
     const setModalVisible = (visible: boolean) => {
         setState({ ...state, modalVisible: visible });
@@ -186,6 +169,7 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
     ) {
         // if nothing is selected -- do nothing
     } else {
+        // TODO this needs to be updated for new genders
         if (!state.filters.male) {
             filteredCases = filteredCases.filter(
                 (c) => c.person.gender !== 'M'
@@ -255,11 +239,21 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
 
     let scroll: ScrollView | null = null;
 
-    return props.isLoadingCases ? (
+    // show login if we are not logged in
+    /* if (!props.auth.isLoggedIn) {
+        return <ConnectionsLogin />;
+    }
+*/
+    console.log(JSON.stringify(props.auth, null, 2));
+    return !props.auth.isLoggedIn ? (
+        <ConnectionsLogin />
+    ) : props.isLoadingCases ? (
         <SafeAreaView style={{ ...styles.safeAreaView }}>
             <Loader />
         </SafeAreaView>
-    ) : props.cases[0] ? (
+    ) : props.casesError ? (
+        <Text>{props.casesError}</Text>
+    ) : (
         <SafeAreaView style={{ ...styles.safeAreaView }}>
             <View
                 style={{
@@ -612,7 +606,7 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
             </Modal>
 
             {/* Case List View Starts Here */}
-            <View style={{ paddingBottom: 142 }}>
+            <View>
                 <View>
                     {isScrolling ? (
                         <ScrollToTop
@@ -652,9 +646,9 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
                                     key={index}
                                     title={result.person.fullName}
                                     titleStyle={{ color: '#5A6064' }}
-                                    subtitle={`${genderAssignment(
+                                    subtitle={`${
                                         result.person.gender
-                                    )}\n${birthdayToSubtitle(
+                                    }\n${birthdayToSubtitle(
                                         result.person
                                     )}`.trim()}
                                     subtitleStyle={{ color: '#9FABB3' }}
@@ -701,19 +695,13 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
                 </View>
             </View>
         </SafeAreaView>
-    ) : (
-        <ConnectionsLogin
-            setUserCreds={props.setUserCreds}
-            setModalVisible={props.setModalVisible}
-        />
     );
 }; // end of FamilyConnectionsScreen
 
-const mapStateToProps = (state: RootState): StateProps => {
+const mapStateToProps = (state: RootState) => {
     return {
-        accessToken: state.auth.accessToken,
-        loadingUser: state.auth.loadingUser,
-        cases: state.cases.results,
+        cases: state.cases.results ?? [], // TODO this is a temporary fie. state.cases.results should never be undefined
+        auth: state.auth,
         isLoadingCases: state.cases.isLoadingCases,
         casesError: state.cases.error,
     };
@@ -721,7 +709,5 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, {
     getCases,
-    setUserCreds,
-    setModalVisible,
-    authChecker,
+    login,
 })(FamilyConnectionsScreen);
