@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },
     engagementForm: {
-        height: 165,
+        height: 270,
         marginBottom: 5,
         width: '100%',
         backgroundColor: 'white',
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     avatarName: {
         justifyContent: 'center',
         alignItems: 'flex-start',
-        paddingBottom: '10%',
+        paddingBottom: '2%',
         paddingTop: 5,
         paddingLeft: 5,
         width: '100%',
