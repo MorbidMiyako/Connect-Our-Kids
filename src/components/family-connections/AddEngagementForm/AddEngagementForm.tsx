@@ -155,6 +155,7 @@ export type AddEngagementFormEngagementTypes =
 
 export interface AddEngagementFormParams {
     relationshipId?: number;
+    relationship?: RelationshipDetailFullFragment;
     caseId: number;
     engagementType: AddEngagementFormEngagementTypes;
     engagementErrorToggle: boolean;
