@@ -130,12 +130,18 @@ export const Engagement = (props: EngagementsProps): JSX.Element => {
 
 interface DocumentsProps {
     document: engagements_engagements_EngagementDocument;
+    documentError?: string;
 }
 
 export const Documents = (props: DocumentsProps): JSX.Element => {
     return (
         <View>
             <ListItem
+                containerStyle={
+                    props.documentError
+                        ? { backgroundColor: 'rgba(0,0,0,0.0)' }
+                        : {}
+                }
                 title={props.document.title}
                 titleStyle={{ color: '#5A6064' }}
                 leftIcon={<AttachmentIcon attachment={props.document} />}

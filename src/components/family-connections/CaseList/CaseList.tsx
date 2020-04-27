@@ -54,6 +54,7 @@ function generateSubTitle(person: RelationshipDetailSlim_person) {
 export default function RelationshipListItem(props: {
     relationship: RelationshipDetailSlim;
     pressed?: () => void;
+    documentError?: string;
 }) {
     return (
         <View style={styles.caseListWrapper}>
@@ -71,7 +72,9 @@ export default function RelationshipListItem(props: {
                         color: getTextColor(props.relationship),
                     }}
                     containerStyle={{
-                        backgroundColor: getBackgroundColor(props.relationship),
+                        backgroundColor: props.documentError
+                            ? 'rgba(0,0,0,0.0)'
+                            : getBackgroundColor(props.relationship),
                         borderRadius: 5,
                         marginTop: 5,
                     }}
@@ -83,12 +86,26 @@ export default function RelationshipListItem(props: {
                                         uri: props.relationship.person.picture,
                                     }}
                                     defaultSource={placeholderImg}
-                                    style={styles.pictureStyle}
+                                    style={[
+                                        styles.pictureStyle,
+                                        props.documentError
+                                            ? {
+                                                  opacity: 0.1,
+                                              }
+                                            : {},
+                                    ]}
                                 />
                             ) : (
                                 <Image
                                     source={placeholderImg}
-                                    style={styles.placeholderImgStyle}
+                                    style={[
+                                        styles.placeholderImgStyle,
+                                        props.documentError
+                                            ? {
+                                                  opacity: 0.1,
+                                              }
+                                            : {},
+                                    ]}
                                 />
                             )}
                         </View>

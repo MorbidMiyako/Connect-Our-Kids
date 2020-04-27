@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     ScrollView,
+    Modal,
 } from 'react-native';
 import constants from '../helpers/constants';
 import { connect } from 'react-redux';
@@ -31,7 +32,7 @@ import { caseDetailFull_engagements_EngagementDocument } from '../generated/case
 import PickFileButton from '../components/family-connections/AddDocumentButtons/PickFileButton';
 import PickPhotoButton from '../components/family-connections/AddDocumentButtons/PickPhotoButton';
 import TakePhotoButton from '../components/family-connections/AddDocumentButtons/TakePhotoButton';
-import { createDocEngagement } from '../store/actions';
+import { createDocEngagement, deleteDocError } from '../store/actions';
 
 const styles = StyleSheet.create({
     topView: {
@@ -139,6 +140,43 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingLeft: 5,
     },
+    centerView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        padding: 35,
+        borderRadius: 10,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    modalButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 96,
+        height: 36,
+        borderRadius: 50,
+        borderWidth: 1,
+        marginTop: 20,
+        backgroundColor: constants.highlightColor,
+        borderColor: constants.highlightColor,
+    },
+
+    modalButtonText: {
+        fontSize: 14,
+        textTransform: 'uppercase',
+        color: '#fff',
+    },
 });
 
 interface StateProps {
@@ -148,11 +186,13 @@ interface StateProps {
     isLoading: boolean;
     documents: EngagementDocumentDetail[];
     engagements: EngagementDetail[];
+    documentError?: string;
 }
 
 interface DispatchProps {
     getRelationship: typeof getRelationship;
     createDocEngagement: typeof createDocEngagement;
+    deleteDocError: typeof deleteDocError;
 }
 
 type Navigation = NavigationScreenProp<NavigationState>;
@@ -167,6 +207,28 @@ export interface RelationshipScreenParams {
     relationshipId: number;
 }
 
+function ErrorModal(modalProps: {
+    error: string;
+    dismissModal: () => void;
+}): JSX.Element {
+    return (
+        <Modal animationType="fade" transparent={true} visible={true}>
+            <View style={styles.centerView}>
+                <View style={styles.modalView}>
+                    <Text>Error adding document. Please Try again later.</Text>
+                    <TouchableOpacity style={styles.modalButton}>
+                        <Text
+                            style={styles.modalButtonText}
+                            onPress={() => modalProps.dismissModal()}
+                        >
+                            close
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    );
+}
 /**
  * This screen shows the information pertaining to one relationship/connection from a case
  * @param props Properties required by this screen
@@ -179,7 +241,6 @@ function RelationshipScreen(props: Props): JSX.Element {
     });
     const [options] = useState({ x: 0, y: 0, animated: true }); // used as landing coordinates for scroll to top
     const [isScrolling, setIsScrolling] = useState(false);
-
     // get once
     useEffect(() => {
         props.getRelationship(props.caseId, props.relationshipId);
@@ -206,7 +267,14 @@ function RelationshipScreen(props: Props): JSX.Element {
             <Loader />
         </View>
     ) : (
-        <View style={{ ...styles.topView }}>
+        <View
+            style={[
+                { ...styles.topView },
+                props.documentError
+                    ? { backgroundColor: 'rgba(0,0,0,0.3)' }
+                    : {},
+            ]}
+        >
             {isScrolling ? (
                 <ScrollToTop
                     style={{
@@ -245,6 +313,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                     <View style={styles.avatarName}>
                         <RelationshipListItem
                             relationship={props.relationship}
+                            documentError={props.documentError}
                         />
                     </View>
                 </View>
@@ -266,7 +335,14 @@ function RelationshipScreen(props: Props): JSX.Element {
                             justifyContent: 'flex-start',
                         }}
                     >
-                        <View style={[styles.tabs]}>
+                        <View
+                            style={[
+                                styles.tabs,
+                                props.documentError
+                                    ? { borderBottomColor: 'rgba(0,0,0,0.0)' }
+                                    : {},
+                            ]}
+                        >
                             <View
                                 style={[
                                     styles.engagementTab,
@@ -504,6 +580,14 @@ function RelationshipScreen(props: Props): JSX.Element {
 
                         {tabs.docs ? (
                             <View style={{ minHeight: 350, width: '100%' }}>
+                                {props.documentError && (
+                                    <ErrorModal
+                                        error={props.documentError}
+                                        dismissModal={() =>
+                                            props.deleteDocError()
+                                        }
+                                    />
+                                )}
                                 <View
                                     style={{
                                         justifyContent: 'center',
@@ -549,6 +633,9 @@ function RelationshipScreen(props: Props): JSX.Element {
                                                     <Documents
                                                         key={document.id}
                                                         document={document}
+                                                        documentError={
+                                                            props.documentError
+                                                        }
                                                     />
                                                 );
                                             })
@@ -613,6 +700,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         engagements?.filter(
             (engagement) => engagement.__typename === 'EngagementDocument'
         ) ?? [];
+    const documentError = state.case.documentError;
 
     return {
         caseId,
@@ -621,10 +709,12 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         relationship: state.relationship.results,
         engagements: engagements,
         documents: documents as caseDetailFull_engagements_EngagementDocument[],
+        documentError,
     };
 };
 
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, {
     getRelationship,
     createDocEngagement,
+    deleteDocError,
 })(RelationshipScreen);

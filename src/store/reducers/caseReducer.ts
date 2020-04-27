@@ -5,13 +5,17 @@ export interface CaseDataState {
     results?: caseDetailFull;
     isLoading: boolean;
     error?: string;
+    documentError?: string;
     isLoadingEngagements: boolean;
     engagementErrorToggle: boolean;
-
 }
 
 export const caseReducer = (
-    state: CaseDataState = { isLoading: false, isLoadingEngagements: false, engagementErrorToggle: false },
+    state: CaseDataState = {
+        isLoading: false,
+        isLoadingEngagements: false,
+        engagementErrorToggle: false,
+    },
     action: CaseActionTypes
 ): CaseDataState => {
     switch (action.type) {
@@ -41,51 +45,67 @@ export const caseReducer = (
             return {
                 ...state,
             };
-        case CaseTypes.CREATE_CALL_ENGAGEMENT:
-            return{
+
+        case CaseTypes.CREATE_DOC_ENGAGEMENT_FAILURE:
+            return {
                 ...state,
-                isLoadingEngagements: true
+                documentError: action.error,
+            };
+        case CaseTypes.CLEAR_DOCUMENT_ERROR:
+            return {
+                ...state,
+                documentError: undefined,
+            };
+        case CaseTypes.CREATE_DOC_ENGAGEMENT_SUCCESS:
+            return {
+                ...state,
+            };
+
+        case CaseTypes.CREATE_CALL_ENGAGEMENT:
+            return {
+                ...state,
+                isLoadingEngagements: true,
             };
         case CaseTypes.CREATE_NOTE_ENGAGEMENT:
-            return{
+            return {
                 ...state,
-                isLoadingEngagements: true
+                isLoadingEngagements: true,
             };
         case CaseTypes.CREATE_EMAIL_ENGAGEMENT:
-            return{
+            return {
                 ...state,
-                isLoadingEngagements: true
+                isLoadingEngagements: true,
             };
         case CaseTypes.CREATE_NOTE_ENGAGEMENT_SUCCESS:
             return {
                 ...state,
-                isLoadingEngagements: false
-                };
+                isLoadingEngagements: false,
+            };
         case CaseTypes.CREATE_CALL_ENGAGEMENT_SUCCESS:
             return {
                 ...state,
-                isLoadingEngagements: false
-                    };
+                isLoadingEngagements: false,
+            };
         case CaseTypes.CREATE_EMAIL_ENGAGEMENT_SUCCESS:
             return {
                 ...state,
-                isLoadingEngagements: false
-                };
+                isLoadingEngagements: false,
+            };
         case CaseTypes.CREATE_NOTE_ENGAGEMENT_FAILURE:
             return {
                 ...state,
-                engagementErrorToggle: true
-                };
+                engagementErrorToggle: true,
+            };
         case CaseTypes.CREATE_CALL_ENGAGEMENT_FAILURE:
             return {
                 ...state,
-                engagementErrorToggle: true
-                };
+                engagementErrorToggle: true,
+            };
         case CaseTypes.CREATE_EMAIL_ENGAGEMENT_FAILURE:
             return {
                 ...state,
-                engagementErrorToggle: true
-                };
+                engagementErrorToggle: true,
+            };
         default:
             return state;
     }

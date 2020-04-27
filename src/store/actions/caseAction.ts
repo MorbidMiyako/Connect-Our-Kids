@@ -39,6 +39,7 @@ export enum CaseTypes {
     GET_CASE_SUCCESS = 'GET_CASE_SUCCESS',
     GET_CASE_FAILURE = 'GET_CASE_FAILURE',
     CLEAR_CASE = 'CLEAR_CASE',
+    CLEAR_DOCUMENT_ERROR = 'CLEAR_DOCUMENT_ERROR',
     CREATE_DOC_ENGAGEMENT = 'CREATE_DOC_ENGAGEMENT',
     CREATE_DOC_ENGAGEMENT_SUCCESS = 'CREATE_DOC_ENGAGEMENT_SUCCESS',
     CREATE_DOC_ENGAGEMENT_FAILURE = 'CREATE_DOC_ENGAGEMENT_FAILURE',
@@ -69,6 +70,10 @@ export interface CaseFailureAction {
 
 export interface CaseClearAction {
     type: CaseTypes.CLEAR_CASE;
+}
+
+export interface DocumentClearErrorAction {
+    type: CaseTypes.CLEAR_DOCUMENT_ERROR;
 }
 
 export interface CreateDocEngagementAction {
@@ -127,6 +132,7 @@ export type CaseActionTypes =
     | CaseSuccessAction
     | CaseFailureAction
     | CaseClearAction
+    | DocumentClearErrorAction
     | CreateDocEngagementAction
     | CreateDocEngagementSuccessAction
     | CreateDocEngagementFailureAction
@@ -234,6 +240,13 @@ export const createDocEngagement = (
                 });
             }
         );
+};
+
+export const deleteDocError = () => (dispatch: CaseDispatch): void => {
+    //resets document error to undefined
+    dispatch({
+        type: CaseTypes.CLEAR_DOCUMENT_ERROR,
+    });
 };
 
 export const createNoteEngagement = (
