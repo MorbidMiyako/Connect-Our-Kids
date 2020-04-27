@@ -82,6 +82,7 @@ export interface CreateDocEngagementAction {
 
 export interface CreateDocEngagementSuccessAction {
     type: CaseTypes.CREATE_DOC_ENGAGEMENT_SUCCESS;
+    documentID?: number;
 }
 
 export interface CreateDocEngagementFailureAction {
@@ -219,10 +220,13 @@ export const createDocEngagement = (
             },
         })
         .then(
-            () => {
+            (res) => {
                 console.log(`Creating document for ${caseId}: success`);
+                console.log('lookhere', res.data?.createEngagementDocument.id);
+
                 dispatch({
                     type: CaseTypes.CREATE_DOC_ENGAGEMENT_SUCCESS,
+                    documentID: res.data?.createEngagementDocument.id,
                 });
             },
             (error: GraphQLError | Error) => {
