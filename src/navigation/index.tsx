@@ -146,9 +146,7 @@ const PeopleSearchNavigator = createStackNavigator({
     },
 });
 
-// Following StackNavigators are inside "More" drawer:
-
-const CustomDrawerNavigator = createStackNavigator({
+const MoreNavigator = createStackNavigator({
     More: {
         screen: MoreScreen,
         navigationOptions: topLevelScreenNavigationOptions,
@@ -196,7 +194,7 @@ const BottomNavigator = createBottomTabNavigator(
         },
 
         MoreNavigator: {
-            screen: CustomDrawerNavigator,
+            screen: MoreNavigator,
             navigationOptions: {
                 tabBarLabel: 'MORE',
                 // eslint-disable-next-line react/display-name
@@ -224,11 +222,5 @@ const BottomNavigator = createBottomTabNavigator(
     }
 );
 
-const AppBottomSwitchNavigator = createSwitchNavigator({
-    FamilyConnections: { screen: BottomNavigator },
-    PeopleSearch: { screen: BottomNavigator },
-    More: { screen: CustomDrawerNavigator },
-});
-
-const AppContainer = createAppContainer(AppBottomSwitchNavigator);
+const AppContainer = createAppContainer(BottomNavigator);
 export default AppContainer;

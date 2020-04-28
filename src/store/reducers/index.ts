@@ -5,10 +5,11 @@ import { confirmationModalReducer as confirmationModal } from './confirmationMod
 import { recentSearchesReducer as recentSearches } from './recentSearchesReducer';
 import { casesReducer } from './casesReducer';
 import { caseReducer } from './caseReducer';
-import { connectionEngagementsReducer as engagements } from './connectionEngagementsReducer';
 import { relationshipReducer } from './relationshipReducer';
+import { schemaReducer } from './schemaReducer';
+import { meReducer } from './meReducer';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
     auth,
     people,
     confirmationModal,
@@ -16,8 +17,8 @@ const rootReducer = combineReducers({
     cases: casesReducer,
     case: caseReducer,
     relationship: relationshipReducer,
-    engagements,
+    schema: schemaReducer,
+    me: meReducer,
 });
-export default rootReducer;
 
 export type RootState = ReturnType<typeof rootReducer>;

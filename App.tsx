@@ -1,9 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { store } from './src/store/store';
 import Navigator from './src/navigation';
 import { StatusBar } from 'react-native';
 import { AppearanceProvider } from 'react-native-appearance';
+import { login } from './src/store/actions';
+import { store } from './src/store/store';
+
+store.dispatch(login(true));
 
 export default function App(): JSX.Element {
     return (
