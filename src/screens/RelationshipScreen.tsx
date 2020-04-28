@@ -32,7 +32,11 @@ import { caseDetailFull_engagements_EngagementDocument } from '../generated/case
 import PickFileButton from '../components/family-connections/AddDocumentButtons/PickFileButton';
 import PickPhotoButton from '../components/family-connections/AddDocumentButtons/PickPhotoButton';
 import TakePhotoButton from '../components/family-connections/AddDocumentButtons/TakePhotoButton';
-import { createDocEngagement, deleteDocError } from '../store/actions';
+import {
+    createDocEngagement,
+    deleteDocError,
+    deleteDocSuccess,
+} from '../store/actions';
 
 const styles = StyleSheet.create({
     topView: {
@@ -193,6 +197,7 @@ interface DispatchProps {
     getRelationship: typeof getRelationship;
     createDocEngagement: typeof createDocEngagement;
     deleteDocError: typeof deleteDocError;
+    deleteDocSuccess: typeof deleteDocSuccess;
 }
 
 type Navigation = NavigationScreenProp<NavigationState>;
@@ -241,6 +246,7 @@ function RelationshipScreen(props: Props): JSX.Element {
     });
     const [options] = useState({ x: 0, y: 0, animated: true }); // used as landing coordinates for scroll to top
     const [isScrolling, setIsScrolling] = useState(false);
+    const [newDoc, setNewDoc] = useState(false);
     // get once
     useEffect(() => {
         props.getRelationship(props.caseId, props.relationshipId);
@@ -258,6 +264,13 @@ function RelationshipScreen(props: Props): JSX.Element {
             relationshipId: props.relationshipId,
             caseId: props.caseId,
         } as AddEngagementFormParams);
+    };
+
+    const showModal = () => {
+        setNewDoc(true);
+        setTimeout(() => {
+            setNewDoc(false);
+        }, 2000);
     };
 
     let scroll: ScrollView | null = null;
@@ -317,7 +330,6 @@ function RelationshipScreen(props: Props): JSX.Element {
                         />
                     </View>
                 </View>
-
                 <View
                     style={[
                         {
@@ -588,6 +600,11 @@ function RelationshipScreen(props: Props): JSX.Element {
                                         }
                                     />
                                 )}
+                                <View>
+                                    <TouchableOpacity onPress={showModal}>
+                                        <Text>Animate the button</Text>
+                                    </TouchableOpacity>
+                                </View>
                                 <View
                                     style={{
                                         justifyContent: 'center',
@@ -636,6 +653,8 @@ function RelationshipScreen(props: Props): JSX.Element {
                                                         documentError={
                                                             props.documentError
                                                         }
+                                                        newDocument={newDoc}
+                                                        newDocumentID={574}
                                                     />
                                                 );
                                             })
@@ -701,7 +720,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
             (engagement) => engagement.__typename === 'EngagementDocument'
         ) ?? [];
     const documentError = state.case.documentError;
-
+    const documentSuccessID = state.case.addedDocumentID;
+    const documentAdded = state.case.documentSuccess;
     return {
         caseId,
         relationshipId,
@@ -710,6 +730,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         engagements: engagements,
         documents: documents as caseDetailFull_engagements_EngagementDocument[],
         documentError,
+        documentSuccessID,
+        documentAdded,
     };
 };
 
@@ -717,4 +739,5 @@ export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, {
     getRelationship,
     createDocEngagement,
     deleteDocError,
+    deleteDocSuccess,
 })(RelationshipScreen);

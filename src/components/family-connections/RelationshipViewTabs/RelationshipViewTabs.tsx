@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
-import { Text, View, Image, Linking } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { Text, View, Image, Linking, Animated } from 'react-native';
+import { ListItem, colors } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AttachmentIcon from '../Attachment/AttachmentIcon';
 import moment from 'moment';
@@ -11,6 +11,7 @@ import {
 } from '../../../generated/engagements';
 
 import placeholderImg from '../../../../assets/profile_placeholder.png';
+import { color } from 'react-native-reanimated';
 
 const getNotes = (engagement: engagements_engagements): string => {
     switch (engagement.__typename) {
@@ -131,15 +132,37 @@ export const Engagement = (props: EngagementsProps): JSX.Element => {
 interface DocumentsProps {
     document: engagements_engagements_EngagementDocument;
     documentError?: string;
+    newDocument?: boolean;
+    newDocumentID?: number;
 }
 
 export const Documents = (props: DocumentsProps): JSX.Element => {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    // const fadeIn = () => {
+    //     // Will change fadeAnim value to 1 in 5 seconds
+    //     Animated.timing(fadeAnim, {
+    //         toValue: 1,
+    //         duration: 2000,
+    //     }).start();
+    // };
+
+    // const fadeOut = () => {
+    //     // Will change fadeAnim value to 0 in 5 seconds
+    //     Animated.timing(fadeAnim, {
+    //         toValue: 0,
+    //         duration: 2000,
+    //     }).start();
+    // };
     return (
         <View>
             <ListItem
                 containerStyle={
                     props.documentError
                         ? { backgroundColor: 'rgba(0,0,0,0.0)' }
+                        : props.document.id === props.newDocumentID &&
+                          props.newDocument
+                        ? { backgroundColor: colors.primary }
                         : {}
                 }
                 title={props.document.title}
