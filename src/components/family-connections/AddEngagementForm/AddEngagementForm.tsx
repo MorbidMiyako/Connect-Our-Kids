@@ -319,9 +319,6 @@ const AddEngagementForm = (props: Props) => {
                             animationType={'fade'}
                             transparent={true}
                             visible={props.isLoadingEngagements}
-                            onRequestClose={() => {
-                                console.log('Modal has been closed.');
-                            }}
                         >
                             <View style={styles.modal}>
                                 <Text>Adding Engagement...</Text>
@@ -335,9 +332,6 @@ const AddEngagementForm = (props: Props) => {
                             animationType={'fade'}
                             transparent={true}
                             visible={toggleErrorModal}
-                            onRequestClose={() => {
-                                console.log('Modal has been closed.');
-                            }}
                         >
                             <View style={styles.modal}>
                                 <Text>Error adding engagement!</Text>
