@@ -4,13 +4,11 @@ export default StyleSheet.create({
     headerStyles: {
         display: 'flex',
         flexDirection: 'row',
-        flexWrap: 'wrap',
-
-        justifyContent: 'center',
     },
     headerImgStyles: {
         width: 200,
         height: 90,
+        marginRight: 40,
     },
     headerBtnView: {
         padding: 5,
