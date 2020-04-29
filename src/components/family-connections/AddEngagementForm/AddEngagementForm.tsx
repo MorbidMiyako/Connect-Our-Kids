@@ -11,7 +11,10 @@ import {
 import constants from '../../../helpers/constants';
 import { connect } from 'react-redux';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import RelationshipListItem from '../CaseList';
 import { RootState } from '../../../store/reducers';
+import { RelationshipDetailFullFragment } from '../../../generated/RelationshipDetailFullFragment';
+
 import {
     createNoteEngagement,
     createCallEngagement,
@@ -36,7 +39,7 @@ const styles = StyleSheet.create({
         height: 36,
         borderRadius: 50,
         borderWidth: 1,
-        marginTop: 20,
+        marginTop: 5,
         backgroundColor: constants.highlightColor,
         borderColor: constants.highlightColor,
     },
@@ -48,27 +51,27 @@ const styles = StyleSheet.create({
     modal: {
         margin: 20,
         marginTop: 180,
-        backgroundColor: "white",
-        borderColor: "white",
+        backgroundColor: 'white',
+        borderColor: 'white',
         borderWidth: 1,
         borderRadius: 10,
         padding: 35,
-        alignItems: "center",
-        alignContent: "center",
-        shadowColor: "#000",
+        alignItems: 'center',
+        alignContent: 'center',
+        shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5
-       },
-       errorText: {
-          textTransform: 'uppercase',
-          color: '#fff'
-       },
-       subjectFormEmail: {
+        elevation: 5,
+    },
+    errorText: {
+        textTransform: 'uppercase',
+        color: '#fff',
+    },
+    subjectFormEmail: {
         minHeight: 25,
         marginBottom: 5,
         width: '100%',
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },
     engagementForm: {
-        height: 165,
+        height: 270,
         marginBottom: 5,
         width: '100%',
         backgroundColor: 'white',
@@ -88,17 +91,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#E5E4E2',
         height: '100%',
-    }
+    },
+    avatarName: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        paddingBottom: '2%',
+        paddingTop: 5,
+        paddingLeft: 5,
+        width: '100%',
+    },
 });
 
 const getTitle = (dataType: AddEngagementFormEngagementTypes): string => {
     switch (dataType) {
         case 'EngagementCall':
-            return 'LOG CALL';
+            return 'Log Call';
         case 'EngagementEmail':
-            return 'LOG Email';
+            return 'Log Email';
         case 'EngagementNote':
-            return 'ADD NOTE';
+            return 'Add Note';
         default:
             throw new Error(`Unsupported engagement type: ${dataType}`);
     }
@@ -108,15 +119,16 @@ const dataTypePlaceholder = (
     dataType: AddEngagementFormEngagementTypes
 ): string => {
     if (dataType === 'EngagementEmail') {
-        return 'ADD EMAIL';
+        return 'Your email notes...';
     } else {
-        return 'ADD NOTE';
+        return 'Your notes...';
     }
 };
 
 interface StateProps {
     caseId: number;
     relationshipId: number;
+    relationship: RelationshipDetailFullFragment;
     engagementType: AddEngagementFormEngagementTypes;
     engagementErrorToggle: boolean;
     isLoadingEngagements: boolean;
@@ -143,6 +155,7 @@ export type AddEngagementFormEngagementTypes =
 
 export interface AddEngagementFormParams {
     relationshipId?: number;
+    relationship?: RelationshipDetailFullFragment;
     caseId: number;
     engagementType: AddEngagementFormEngagementTypes;
     engagementErrorToggle: boolean;
@@ -153,12 +166,13 @@ const AddEngagementForm = (props: Props) => {
     const [note, setNote] = useState('');
     const [subject, setSubject] = useState('');
     const [isPublic] = useState(true);
-    const [toggleErrorModal, setErrorToggleModal] = useState(false)
+    const [toggleErrorModal, setErrorToggleModal] = useState(false);
 
     const toggleErrorModalHandler = () => {
-        (props.engagementErrorToggle) ?
-        setErrorToggleModal(!toggleErrorModal) : props.navigation.goBack()
-        }
+        props.engagementErrorToggle
+            ? setErrorToggleModal(!toggleErrorModal)
+            : props.navigation.goBack();
+    };
 
     const createEngagement = () => {
         switch (props.engagementType) {
@@ -194,31 +208,46 @@ const AddEngagementForm = (props: Props) => {
 
     return (
         <ScrollView
-            contentContainerStyle={[styles.containerStyle, toggleErrorModal ? {backgroundColor: 'rgba(0, 0, 0, 0.25)'} : {}]}
+            contentContainerStyle={[
+                styles.containerStyle,
+                toggleErrorModal
+                    ? { backgroundColor: 'rgba(0, 0, 0, 0.25)' }
+                    : {},
+            ]}
         >
-
+            <View style={{ width: '100%' }}>
+                <View style={styles.avatarName}>
+                    <RelationshipListItem relationship={props.relationship} />
+                </View>
+            </View>
             <View style={[styles.formContainer]}>
                 <View
                     style={{
                         width: '100%',
                         alignItems: 'flex-start',
-                        marginTop: 7,
-                        marginBottom: 13,
+                        marginTop: 12,
+                        marginBottom: 25,
+                        paddingLeft: 15,
                     }}
                 >
-                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                    <Text style={{ fontSize: 17.5 }}>
                         {getTitle(props.engagementType)}
                     </Text>
                 </View>
                 {props.engagementType === 'EngagementEmail' ? (
                     <View
-                        style={[styles.subjectFormEmail, toggleErrorModal ? {backgroundColor: 'rgba(0, 0, 0, 0)'} : {}]}
+                        style={[
+                            styles.subjectFormEmail,
+                            toggleErrorModal
+                                ? { backgroundColor: 'rgba(0, 0, 0, 0)' }
+                                : {},
+                        ]}
                     >
                         <TextInput
                             onChangeText={(text) => {
                                 setSubject(text);
                             }}
-                            placeholder="SUBJECT"
+                            placeholder="Subject"
                             placeholderTextColor={'#AAA9AD'}
                             style={{ padding: 4, fontSize: 15 }}
                             textAlignVertical="top"
@@ -227,7 +256,12 @@ const AddEngagementForm = (props: Props) => {
                     </View>
                 ) : null}
                 <View
-                    style={[styles.engagementForm, toggleErrorModal ? {backgroundColor: 'rgba(0, 0, 0, 0)'} : {}]}
+                    style={[
+                        styles.engagementForm,
+                        toggleErrorModal
+                            ? { backgroundColor: 'rgba(0, 0, 0, 0)' }
+                            : {},
+                    ]}
                 >
                     <TextInput
                         multiline
@@ -238,7 +272,7 @@ const AddEngagementForm = (props: Props) => {
                         placeholder={dataTypePlaceholder(props.engagementType)}
                         placeholderTextColor={'#AAA9AD'}
                         style={{
-                            padding: 4,
+                            padding: 10,
                             width: '100%',
                             height: '100%',
                             fontSize: 15,
@@ -252,7 +286,6 @@ const AddEngagementForm = (props: Props) => {
                 <View
                     style={{
                         width: '100%',
-                        marginTop: 20,
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         alignItems: 'flex-start',
@@ -269,63 +302,72 @@ const AddEngagementForm = (props: Props) => {
                         style={{
                             width: '100%',
                             alignItems: 'flex-end',
-                            marginTop: 20,
+                            marginTop: 12,
                         }}
                     >
-                    <TouchableOpacity
-                        style={styles.saveButton}
-                        onPress={() => {
-                            createEngagement();
-                            toggleErrorModalHandler();
+                        <TouchableOpacity
+                            style={styles.saveButton}
+                            onPress={() => {
+                                createEngagement();
+                                toggleErrorModalHandler();
                             }}
                         >
                             <Text style={styles.buttonText}>SAVE</Text>
                         </TouchableOpacity>
 
-        <Modal animationType = {"fade"} transparent = {true}
-            visible = {props.isLoadingEngagements}
-            onRequestClose = {() => { console.log("Modal has been closed.") } }>
-            <View style = {styles.modal}>
-                <Text>Adding Engagement...</Text>
-            </View>
-            <View>
-                <Loader/>
-            </View>
-        </Modal>
+                        <Modal
+                            animationType={'fade'}
+                            transparent={true}
+                            visible={props.isLoadingEngagements}
+                        >
+                            <View style={styles.modal}>
+                                <Text>Adding Engagement...</Text>
+                            </View>
+                            <View>
+                                <Loader />
+                            </View>
+                        </Modal>
 
-        <Modal animationType = {"fade"} transparent = {true}
-          visible = {toggleErrorModal}
-          onRequestClose = {() => { console.log("Modal has been closed.") } }>
-          <View style = {styles.modal}>
-             <Text>Error adding engagement!</Text>
-             <Text>Please try again later.</Text>
-             <TouchableOpacity style = {styles.saveButton}
-             onPress = {() => {
-                toggleErrorModalHandler();}}>
-                <Text style = {styles.errorText}>Close</Text>
-             </TouchableOpacity>
-          </View>
-       </Modal>
+                        <Modal
+                            animationType={'fade'}
+                            transparent={true}
+                            visible={toggleErrorModal}
+                        >
+                            <View style={styles.modal}>
+                                <Text>Error adding engagement!</Text>
+                                <Text>Please try again later.</Text>
+                                <TouchableOpacity
+                                    style={styles.saveButton}
+                                    onPress={() => {
+                                        toggleErrorModalHandler();
+                                    }}
+                                >
+                                    <Text style={styles.errorText}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
                     </View>
                 </View>
             </View>
         </ScrollView>
     );
-    };
+};
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     // passed in parameter on navigate
     const relationshipId = ownProps.navigation.getParam(
         'relationshipId'
     ) as number;
-
+    const relationship = ownProps.navigation.getParam(
+        'relationship'
+    ) as RelationshipDetailFullFragment;
     // passed in parameter on navigate
     const engagementType = ownProps.navigation.getParam(
         'engagementType'
     ) as AddEngagementFormEngagementTypes;
 
-    const engagementErrorToggle: boolean = state.case.engagementErrorToggle
-    const isLoadingEngagements: boolean = state.case.isLoadingEngagements
+    const engagementErrorToggle: boolean = state.case.engagementErrorToggle;
+    const isLoadingEngagements: boolean = state.case.isLoadingEngagements;
     // this component only supports the following types
     if (
         engagementType !== 'EngagementCall' &&
@@ -343,14 +385,15 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     return {
         caseId,
         relationshipId,
+        relationship,
         engagementType,
         engagementErrorToggle,
-        isLoadingEngagements
+        isLoadingEngagements,
     };
 };
 
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, {
     createNoteEngagement,
     createCallEngagement,
-    createEmailEngagement
+    createEmailEngagement,
 })(AddEngagementForm);
