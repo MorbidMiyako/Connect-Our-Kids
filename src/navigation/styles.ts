@@ -9,7 +9,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
     },
     headerImgStyles: {
-        width: 240,
+        width: 200,
         height: 90,
     },
     headerBtnView: {
