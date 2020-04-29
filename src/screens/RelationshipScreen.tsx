@@ -15,7 +15,6 @@ import {
 } from '../components/family-connections/RelationshipViewTabs';
 import Loader from '../components/Loader';
 import ConnectionsDetailsView from '../components/family-connections/RelationshipViewTabs/RelationshipDetailsView';
-import AddDocumentButtonsGroup from '../components/family-connections/AddDocumentButtonsGroup';
 import RelationshipListItem from '../components/family-connections/CaseList';
 import { created } from '../helpers/comparators';
 
@@ -29,6 +28,12 @@ import { EngagementTypes } from '../components/family-connections/EngagementType
 import { AddEngagementFormParams } from '../components/family-connections/AddEngagementForm/AddEngagementForm';
 import ScrollToTop from '../components/family-connections/ScrollToTop/ScrollToTop';
 import { caseDetailFull_engagements_EngagementDocument } from '../generated/caseDetailFull';
+import PickFileButton from '../components/family-connections/AddDocumentButtons/PickFileButton';
+import PickPhotoButton from '../components/family-connections/AddDocumentButtons/PickPhotoButton';
+import TakePhotoButton from '../components/family-connections/AddDocumentButtons/TakePhotoButton';
+import { createDocEngagement } from '../store/actions';
+import { AuthState } from '../store/reducers/authReducer';
+import ConnectionsLogin from '../components/auth/ConnectionsLogin';
 
 const styles = StyleSheet.create({
     topView: {
@@ -72,6 +77,14 @@ const styles = StyleSheet.create({
     },
     thatBlue: {
         color: constants.highlightColor,
+    },
+
+    documentsButtonsGroup: {
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        flexDirection: 'row',
+        padding: 4,
+        width: '100%',
     },
 
     engagementSelected: {
@@ -131,16 +144,18 @@ const styles = StyleSheet.create({
 });
 
 interface StateProps {
-    caseId: number;
+    caseId?: number;
     relationshipId: number;
     relationship?: RelationshipDetailFullFragment;
     isLoading: boolean;
     documents: EngagementDocumentDetail[];
     engagements: EngagementDetail[];
+    auth: AuthState;
 }
 
 interface DispatchProps {
     getRelationship: typeof getRelationship;
+    createDocEngagement: typeof createDocEngagement;
 }
 
 type Navigation = NavigationScreenProp<NavigationState>;
@@ -170,7 +185,9 @@ function RelationshipScreen(props: Props): JSX.Element {
 
     // get once
     useEffect(() => {
-        props.getRelationship(props.caseId, props.relationshipId);
+        if (props.caseId) {
+            props.getRelationship(props.caseId, props.relationshipId);
+        }
     }, []);
 
     // const leftArrow = '\u2190';
@@ -188,6 +205,10 @@ function RelationshipScreen(props: Props): JSX.Element {
     };
 
     let scroll: ScrollView | null = null;
+
+    if (!props.auth.isLoggedIn) {
+        return <ConnectionsLogin />;
+    }
 
     return props.isLoading || !props.relationship ? (
         <View style={{ ...styles.topView }}>
@@ -498,14 +519,32 @@ function RelationshipScreen(props: Props): JSX.Element {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <AddDocumentButtonsGroup
-                                        afterAccept={(media) => {
-                                            props.navigation.navigate(
-                                                'DocumentForm',
-                                                { media }
-                                            );
-                                        }}
-                                    />
+                                    <View style={styles.documentsButtonsGroup}>
+                                        <PickFileButton
+                                            afterAccept={(media) => {
+                                                props.navigation.navigate(
+                                                    'DocumentForm',
+                                                    { media }
+                                                );
+                                            }}
+                                        />
+                                        <PickPhotoButton
+                                            afterAccept={(media) => {
+                                                props.navigation.navigate(
+                                                    'DocumentForm',
+                                                    { media }
+                                                );
+                                            }}
+                                        />
+                                        <TakePhotoButton
+                                            afterAccept={(media) => {
+                                                props.navigation.navigate(
+                                                    'DocumentForm',
+                                                    { media }
+                                                );
+                                            }}
+                                        />
+                                    </View>
                                 </View>
                                 <View
                                     style={{ width: '100%', maxHeight: '100%' }}
@@ -568,10 +607,6 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 
     const caseId = state.case.results?.details?.id;
 
-    if (!caseId) {
-        throw new Error('Case id not specified');
-    }
-
     // engagements are at the case level. Filter to ones relevant
     // to this relationship/connection
     const engagements =
@@ -591,9 +626,11 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         relationship: state.relationship.results,
         engagements: engagements,
         documents: documents as caseDetailFull_engagements_EngagementDocument[],
+        auth: state.auth,
     };
 };
 
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, {
     getRelationship,
+    createDocEngagement,
 })(RelationshipScreen);

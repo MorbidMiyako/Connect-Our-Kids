@@ -32,11 +32,16 @@ import {
 import { RelationshipScreenParams } from './RelationshipScreen';
 import constants from '../helpers/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ConnectionsLogin from '../components/auth/ConnectionsLogin';
+import { AuthState } from '../store/reducers/authReducer';
+import { createPersonSubtitle } from '../helpers/personSubtitle';
+import moment from 'moment';
 
 interface StateProps {
     case?: caseDetailFull;
     isLoadingCase: boolean;
     caseError?: string;
+    auth: AuthState;
 }
 
 interface DispatchProps {
@@ -64,9 +69,9 @@ const CaseScreen = (props: Props) => {
         3: false,
         4: false,
         5: false,
-        6: false, // male
-        7: false, // female
-        8: false, // unspecified gender
+        6: false, // male  TODO update for new genders
+        7: false, // female TODO update for new genders
+        8: false, // unspecified gender TODO update for new genders
         name: true,
         last: false,
         DOB: false,
@@ -85,18 +90,7 @@ const CaseScreen = (props: Props) => {
         setSearchKeywords(e);
     };
 
-    const genderAssignment = (gender: string | null): string | null => {
-        if (gender === 'M') {
-            return 'Male';
-        } else if (gender === 'F') {
-            return 'Female';
-        } else if (gender === 'O') {
-            return 'Not Specified';
-        } else {
-            return null;
-        }
-    };
-
+    // TODO this is wrong with new genders
     const genderFilter = (arr: caseDetailFull_relationships[]) => {
         // ------GENDER FILTER functionality------
         if (!filtersSelected[6] && !filtersSelected[7] && !filtersSelected[8]) {
@@ -212,6 +206,10 @@ const CaseScreen = (props: Props) => {
         },
     });
 
+    if (!props.auth.isLoggedIn) {
+        return <ConnectionsLogin />;
+    }
+
     let scroll: ScrollView | null = null;
 
     return (
@@ -259,26 +257,11 @@ const CaseScreen = (props: Props) => {
                                 titleStyle={{ fontSize: 18 }}
                                 subtitle={
                                     <View>
-                                        {props.case.details?.person.gender ? (
-                                            <Text style={{ color: '#434245' }}>
-                                                {genderAssignment(
-                                                    props.case.details.person
-                                                        .gender
-                                                )}
-                                            </Text>
-                                        ) : null}
-                                        {props.case.details.person
-                                            .birthdayRaw &&
-                                        props.case.details.person.birthdayRaw
-                                            ?.length > 0 ? (
-                                            <Text style={{ color: '#434245' }}>
-                                                Date of Birth:{' '}
-                                                {
-                                                    props.case.details?.person
-                                                        .birthdayRaw
-                                                }
-                                            </Text>
-                                        ) : null}
+                                        <Text style={{ color: '#434245' }}>
+                                            {createPersonSubtitle(
+                                                props.case.details.person
+                                            )}
+                                        </Text>
                                         {props.case.details.person.addresses
                                             ?.length > 0 &&
                                         props.case.details?.person.addresses[0]
@@ -292,8 +275,11 @@ const CaseScreen = (props: Props) => {
                                         ) : null}
                                         {props.case.details.fosterCare ? (
                                             <Text style={{ color: '#434245' }}>
-                                                Case Initiation:{' '}
-                                                {props.case.details.fosterCare}
+                                                Case Initiation:
+                                                {moment(
+                                                    props.case.details
+                                                        .fosterCare
+                                                ).format(' LL')}
                                             </Text>
                                         ) : null}
                                     </View>
@@ -988,7 +974,7 @@ const CaseScreen = (props: Props) => {
                         </Modal>
                     </ScrollView>
                 ) : (
-                    <Loader style={{ flex: 1, flexGrow: 1 }} />
+                    <Loader />
                 )}
             </View>
         </SafeAreaView>
@@ -1000,6 +986,7 @@ const mapStateToProps = (state: RootState) => {
         case: state.case.results,
         isLoadingCase: state.case.isLoading,
         caseError: state.case.error,
+        auth: state.auth,
     };
 };
 

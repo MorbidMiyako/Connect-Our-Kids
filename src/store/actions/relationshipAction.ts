@@ -1,4 +1,3 @@
-import { client } from './apollo';
 import { GraphQLError } from 'graphql';
 import {
     relationshipDetailFull,
@@ -6,6 +5,9 @@ import {
     relationshipDetailFull_relationship,
 } from '../../generated/relationshipDetailFull';
 import { RELATIONSHIP_DETAIL_FULL_QUERY } from './fragments/relationship';
+import ApolloClient from 'apollo-client';
+import { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { ThunkResult } from '../store';
 
 export enum RelationshipTypes {
     GET_RELATIONSHIP_START = 'GET_RELATIONSHIP_START',
@@ -42,8 +44,13 @@ export interface RelationshipDispatch {
     (arg0: RelationshipActionTypes): void;
 }
 
-export const getRelationship = (caseId: number, relationshipId: number) => (
-    dispatch: RelationshipDispatch
+export const getRelationship = (
+    caseId: number,
+    relationshipId: number
+): ThunkResult<void> => (
+    dispatch: RelationshipDispatch,
+    getState,
+    { client }: { client: ApolloClient<NormalizedCacheObject> }
 ): void => {
     dispatch({ type: RelationshipTypes.GET_RELATIONSHIP_START });
     console.log(`Loading relationship ${relationshipId}...`);
@@ -78,7 +85,7 @@ export const getRelationship = (caseId: number, relationshipId: number) => (
         );
 };
 
-export const clearRelationship = () => (
+export const clearRelationship = (): ThunkResult<void> => (
     dispatch: RelationshipDispatch
 ): void => {
     dispatch({ type: RelationshipTypes.CLEAR_RELATIONSHIP });

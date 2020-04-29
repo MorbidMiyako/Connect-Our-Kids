@@ -1,4 +1,5 @@
 {
+  "react-native.packager.port": 19001,
   /***************************************
     ESLint
   ***************************************/
@@ -47,5 +48,9 @@
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnSave": false,
   },
+  "cSpell.words": [
+    "Ionicons",
+    "openid"
+  ],
   /**************************************/
 }
