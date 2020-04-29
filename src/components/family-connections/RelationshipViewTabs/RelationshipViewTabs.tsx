@@ -1,6 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { Text, View, Image, Linking, Animated } from 'react-native';
+import {
+    Text,
+    View,
+    Image,
+    Linking,
+    Animated,
+    StyleProp,
+    ViewStyle,
+} from 'react-native';
 import { ListItem, colors } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AttachmentIcon from '../Attachment/AttachmentIcon';
@@ -11,7 +19,7 @@ import {
 } from '../../../generated/engagements';
 
 import placeholderImg from '../../../../assets/profile_placeholder.png';
-import { color } from 'react-native-reanimated';
+import { color, Value } from 'react-native-reanimated';
 
 const getNotes = (engagement: engagements_engagements): string => {
     switch (engagement.__typename) {
@@ -139,30 +147,42 @@ interface DocumentsProps {
 export const Documents = (props: DocumentsProps): JSX.Element => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
-    // const fadeIn = () => {
-    //     // Will change fadeAnim value to 1 in 5 seconds
-    //     Animated.timing(fadeAnim, {
-    //         toValue: 1,
-    //         duration: 2000,
-    //     }).start();
-    // };
+    const fadeIn = () => {
+        // Will change fadeAnim value to 1 in 5 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 3000,
+            useNativeDriver: false,
+        }).start();
+    };
 
-    // const fadeOut = () => {
-    //     // Will change fadeAnim value to 0 in 5 seconds
-    //     Animated.timing(fadeAnim, {
-    //         toValue: 0,
-    //         duration: 2000,
-    //     }).start();
-    // };
+    useEffect(() => {
+        if (props.document.id === props.newDocumentID && props.newDocument) {
+            fadeIn();
+
+            console.log('test');
+        }
+    }, [props.newDocument]);
+
     return (
-        <View>
+        <Animated.View
+            style={
+                props.document.id === props.newDocumentID && props.newDocument
+                    ? {
+                          opacity: fadeAnim, // Bind opacity to animated value
+                      }
+                    : {}
+            }
+        >
             <ListItem
                 containerStyle={
                     props.documentError
                         ? { backgroundColor: 'rgba(0,0,0,0.0)' }
                         : props.document.id === props.newDocumentID &&
                           props.newDocument
-                        ? { backgroundColor: colors.primary }
+                        ? {
+                              backgroundColor: colors.primary,
+                          }
                         : {}
                 }
                 title={props.document.title}
@@ -186,6 +206,6 @@ export const Documents = (props: DocumentsProps): JSX.Element => {
                 }
                 chevron
             />
-        </View>
+        </Animated.View>
     );
 };

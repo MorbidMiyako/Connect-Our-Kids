@@ -191,6 +191,8 @@ interface StateProps {
     documents: EngagementDocumentDetail[];
     engagements: EngagementDetail[];
     documentError?: string;
+    documentSuccess: boolean;
+    documentSuccessID?: number;
 }
 
 interface DispatchProps {
@@ -251,6 +253,13 @@ function RelationshipScreen(props: Props): JSX.Element {
     useEffect(() => {
         props.getRelationship(props.caseId, props.relationshipId);
     }, []);
+    useEffect(() => {
+        if (props.documentSuccess) {
+            setTimeout(() => {
+                props.deleteDocSuccess();
+            }, 3000);
+        }
+    }, [props.documentSuccess]);
 
     // const leftArrow = '\u2190';
 
@@ -264,13 +273,6 @@ function RelationshipScreen(props: Props): JSX.Element {
             relationshipId: props.relationshipId,
             caseId: props.caseId,
         } as AddEngagementFormParams);
-    };
-
-    const showModal = () => {
-        setNewDoc(true);
-        setTimeout(() => {
-            setNewDoc(false);
-        }, 2000);
     };
 
     let scroll: ScrollView | null = null;
@@ -600,11 +602,6 @@ function RelationshipScreen(props: Props): JSX.Element {
                                         }
                                     />
                                 )}
-                                <View>
-                                    <TouchableOpacity onPress={showModal}>
-                                        <Text>Animate the button</Text>
-                                    </TouchableOpacity>
-                                </View>
                                 <View
                                     style={{
                                         justifyContent: 'center',
@@ -653,8 +650,12 @@ function RelationshipScreen(props: Props): JSX.Element {
                                                         documentError={
                                                             props.documentError
                                                         }
-                                                        newDocument={newDoc}
-                                                        newDocumentID={574}
+                                                        newDocument={
+                                                            props.documentSuccess
+                                                        }
+                                                        newDocumentID={
+                                                            props.documentSuccessID
+                                                        }
                                                     />
                                                 );
                                             })
@@ -721,7 +722,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         ) ?? [];
     const documentError = state.case.documentError;
     const documentSuccessID = state.case.addedDocumentID;
-    const documentAdded = state.case.documentSuccess;
+    const documentSuccess = state.case.documentSuccess;
     return {
         caseId,
         relationshipId,
@@ -731,7 +732,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         documents: documents as caseDetailFull_engagements_EngagementDocument[],
         documentError,
         documentSuccessID,
-        documentAdded,
+        documentSuccess,
     };
 };
 
