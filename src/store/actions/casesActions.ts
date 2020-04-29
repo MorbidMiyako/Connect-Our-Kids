@@ -1,4 +1,3 @@
-import { client } from './apollo';
 import {
     CASES_DETAIL_SLIM_QUERY,
     CREATE_CASE_MUTATION,
@@ -14,6 +13,9 @@ import {
     createCaseMutation,
     createCaseMutationVariables,
 } from '../../generated/createCaseMutation';
+import ApolloClient from 'apollo-client';
+import { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { ThunkResult } from '../store';
 
 export enum CasesTypes {
     GET_USER_CASES_START = 'GET_USER_CASES_START',
@@ -71,7 +73,11 @@ export interface CreateCaseFailureAction {
 }
 
 // this action grabs all cases for a specified user
-export const getCases = () => (dispatch: CasesDispatch) => {
+export const getCases = (): ThunkResult<void> => (
+    dispatch: CasesDispatch,
+    getState,
+    { client }: { client: ApolloClient<NormalizedCacheObject> }
+) => {
     dispatch({ type: CasesTypes.GET_USER_CASES_START });
     console.log('Loading cases...');
 
@@ -98,8 +104,10 @@ export const getCases = () => (dispatch: CasesDispatch) => {
         );
 };
 
-export const createCase = (value: CreateCaseInput) => (
-    dispatch: CasesDispatch
+export const createCase = (value: CreateCaseInput): ThunkResult<void> => (
+    dispatch: CasesDispatch,
+    getState,
+    { client }: { client: ApolloClient<NormalizedCacheObject> }
 ): void => {
     dispatch({ type: CasesTypes.CREATE_CASE });
     console.log(`Creating case...`);
@@ -144,7 +152,9 @@ export const createCase = (value: CreateCaseInput) => (
         );
 };
 
-export const clearUserCases = () => (dispatch: CasesDispatch): void => {
+export const clearUserCases = (): ThunkResult<void> => (
+    dispatch: CasesDispatch
+): void => {
     dispatch({ type: CasesTypes.CLEAR_USER_CASES });
     // TODO actually clear data
 };

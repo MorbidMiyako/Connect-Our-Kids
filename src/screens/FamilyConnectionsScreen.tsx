@@ -37,11 +37,10 @@ import { RadioButton } from 'react-native-paper';
 import placeholderImg from '../../assets/profile_placeholder.png';
 import { RootState } from '../store/reducers';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
-import {
-    casesDetailSlim_cases,
-    casesDetailSlim_cases_person,
-} from '../generated/casesDetailSlim';
+import { casesDetailSlim_cases } from '../generated/casesDetailSlim';
 import { AuthState } from '../store/reducers/authReducer';
+import { UserFullFragment_userTeam_team } from '../generated/UserFullFragment';
+import { createPersonSubtitle } from '../helpers/personSubtitle';
 // unicode arrow
 const leftArrow = '\u2190';
 
@@ -50,6 +49,7 @@ interface StateProps {
     cases: casesDetailSlim_cases[];
     isLoadingCases: boolean;
     casesError?: string;
+    team?: UserFullFragment_userTeam_team;
 }
 
 interface DispatchProps {
@@ -223,29 +223,9 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
         );
     });
 
-    function birthdayToSubtitle(person: casesDetailSlim_cases_person) {
-        if (person.birthYear && person.birthMonth && person.dayOfBirth) {
-            return `Birth: ${person.birthMonth}/${person.dayOfBirth}/${person.birthYear}`;
-        } else if (person.birthYear && person.birthMonth) {
-            return `Birth: ${person.birthMonth}/${person.birthYear}`;
-        } else if (person.birthYear) {
-            return `Birth: ${person.birthYear}`;
-        } else if (person.birthdayRaw) {
-            return `Birth: ${person.birthdayRaw}`;
-        } else {
-            return '';
-        }
-    }
-
     let scroll: ScrollView | null = null;
 
-    // show login if we are not logged in
-    /* if (!props.auth.isLoggedIn) {
-        return <ConnectionsLogin />;
-    }
-*/
-    console.log(JSON.stringify(props.auth, null, 2));
-    return !props.auth.isLoggedIn ? (
+    return !props.auth.isLoggedIn || !props.team ? (
         <ConnectionsLogin />
     ) : props.isLoadingCases ? (
         <SafeAreaView style={{ ...styles.safeAreaView }}>
@@ -646,11 +626,9 @@ const FamilyConnectionsScreen = (props: Props): JSX.Element => {
                                     key={index}
                                     title={result.person.fullName}
                                     titleStyle={{ color: '#5A6064' }}
-                                    subtitle={`${
-                                        result.person.gender
-                                    }\n${birthdayToSubtitle(
+                                    subtitle={createPersonSubtitle(
                                         result.person
-                                    )}`.trim()}
+                                    )}
                                     subtitleStyle={{ color: '#9FABB3' }}
                                     leftAvatar={
                                         <View
@@ -704,6 +682,7 @@ const mapStateToProps = (state: RootState) => {
         auth: state.auth,
         isLoadingCases: state.cases.isLoadingCases,
         casesError: state.cases.error,
+        team: state.me.results?.userTeam?.team,
     };
 };
 
