@@ -1,4 +1,3 @@
-import { RootState } from '../reducers';
 import {
     IdToken,
     loginInternal,
@@ -6,6 +5,12 @@ import {
     logOutInternal,
 } from '../../helpers/auth';
 import { ThunkResult } from '../store';
+import { clearUserCases } from './casesActions';
+import { getMe, clearMe } from './meActions';
+import { clearCase } from './caseAction';
+import { clearSchema } from './schemaActions';
+import { clearRelationship } from './relationshipAction';
+import * as Sentry from 'sentry-expo';
 
 export enum AuthTypes {
     LOG_OUT_START = 'LOG_OUT_START',
@@ -84,13 +89,10 @@ export type AuthActionTypes =
     | AuthSetVideoAgreeVisibleAction // TODO move to local state
     | AuthSetVideoPlayerVisibleAction; // TODO move to local state
 
-export interface AuthDispatch {
-    (arg0: AuthActionTypes): void;
-}
-
 export const logout = (): ThunkResult<void> => async (
-    dispatch: AuthDispatch,
-    getState: () => RootState
+    dispatch,
+    getState,
+    { client }
 ) => {
     console.log(`Logout requested`);
     const currentState = getState();
@@ -112,6 +114,20 @@ export const logout = (): ThunkResult<void> => async (
         type: AuthTypes.LOG_OUT_START,
     });
     const logOutResult = await logOutInternal();
+    // clear all cache in Apollo
+    const result = await client.clearStore();
+    console.log(`Clear Apollo store result: ${result}`);
+    dispatch(clearCase());
+    dispatch(clearUserCases());
+    dispatch(clearMe());
+    dispatch(clearSchema());
+    dispatch(clearRelationship());
+    // TODO clear the family connections navigator stack so we start
+    // at the cases view
+
+    // clear user info from sentry
+    Sentry.configureScope((scope) => scope.setUser(null));
+
     if (logOutResult.error) {
         console.log(`Failed to log out. Error: ${logOutResult.error}`);
         dispatch({
@@ -131,7 +147,7 @@ export const logout = (): ThunkResult<void> => async (
  */
 export const login = (refreshOnly = false): ThunkResult<void> => async (
     dispatch,
-    getState: () => RootState
+    getState
 ) => {
     console.log(`${refreshOnly ? 'Refresh' : 'Full'} login requested...`);
 
@@ -167,6 +183,15 @@ export const login = (refreshOnly = false): ThunkResult<void> => async (
             type: AuthTypes.LOGIN_SUCCESS,
             user: isLoggedIn.idTokenDecoded,
         });
+        // add user info to sentry
+        Sentry.configureScope(function (scope) {
+            scope.setUser({
+                email: isLoggedIn.idTokenDecoded.email,
+                id: isLoggedIn.idTokenDecoded.sub,
+                username: isLoggedIn.idTokenDecoded.name,
+            });
+        });
+        dispatch(getMe());
         return;
     }
 
@@ -204,116 +229,42 @@ export const login = (refreshOnly = false): ThunkResult<void> => async (
                 type: AuthTypes.LOGIN_SUCCESS,
                 user: loginResult.idToken,
             });
+
+            // add user info to sentry
+            Sentry.configureScope(function (scope) {
+                scope.setUser({
+                    email: loginResult.idToken.email,
+                    id: loginResult.idToken.sub,
+                    username: loginResult.idToken.name,
+                });
+            });
+            dispatch(getMe());
             break;
     }
 };
 
-export const clearLoginError = () => (dispatch: AuthDispatch) => {
+export const clearLoginError = (): ThunkResult<void> => (dispatch) => {
     dispatch({
         type: AuthTypes.CLEAR_LOGIN_ERROR,
     });
 };
 
-/**
- * Initializes the redux store with auth data from SecureStorage
- */
-/*
-export const initializeAuth = () => async (dispatch: AuthDispatch) => {
-    console.log(`Initializing auth`);
-
-    dispatch({
-        type: AuthTypes.LOGIN_START,
-    });
-
-    try {
-        console.log(`Initializing auth2`);
-        const idToken = await getIdTokenFromSecureStorage();
-        const accessToken = await getAccessTokenFromSecureStorage();
-        const refreshToken = await getRefreshTokenFromSecureStorage();
-
-        if (idToken && refreshToken) {
-            if (accessToken && !accessToken.isExpired) {
-                // everything is good. No need to hit the internet
-                dispatch({
-                    type: AuthTypes.LOGIN_SUCCESS,
-                    user: idToken.decodedToken,
-                });
-                return;
-            } else {
-                // attempt to refresh our access token
-                const refreshTokenResponse = await refreshAccessToken();
-                console.log(`Initializing auth - success`);
-                if (refreshTokenResponse) {
-                    // auth is good. return success
-                    dispatch({
-                        type: AuthTypes.LOGIN_SUCCESS,
-                        user: idToken.decodedToken,
-                    });
-                    return;
-                }
-            }
-        }
-    } catch (error) {
-        console.debug(`Error initializing auth. Error: ${error.message}`);
-        console.debug(JSON.stringify(error, null, 2));
-    }
-    console.log(`Initializing auth - fail`);
-    dispatch({
-        type: AuthTypes.LOGIN_FAILURE,
-    });
-};
-
-/*
-export const authChecker = () => (dispatch: AuthDispatch) => {
-    SecureStore.getItemAsync(accessTokenName)
-        .then((res) => {
-            if (res) {
-                dispatch({ type: AuthTypes.SET_ACCESS_TOKEN, payload: res });
-                SecureStore.getItemAsync(idTokenName).then((res) => {
-                    if (res) {
-                        const decodedIdToken = jwtDecode(res);
-                        dispatch({
-                            type: AuthTypes.SET_ID_TOKEN,
-                            payload: decodedIdToken,
-                        });
-                        dispatch({
-                            type: AuthTypes.SET_LOGGED_IN_STATUS,
-                            payload: true,
-                        });
-                    } else {
-                        dispatch({
-                            type: AuthTypes.SET_LOGGED_IN_STATUS,
-                            payload: false,
-                        });
-                    }
-                });
-            } else {
-                dispatch({
-                    type: AuthTypes.SET_LOGGED_IN_STATUS,
-                    payload: false,
-                });
-            }
-        })
-        .catch((err) => console.log(err));
-};
- */
-
 // Sign Up Modal Sequence Actions
-export const setModalVisible = (visible: boolean) => (
-    dispatch: AuthDispatch
+export const setModalVisible = (visible: boolean): ThunkResult<void> => (
+    dispatch
 ) => {
     dispatch({ type: AuthTypes.SET_MODAL_VISIBLE, visible });
 };
 
-export const setAgreeModalVisible = (visible: boolean) => (
-    dispatch: AuthDispatch
+export const setAgreeModalVisible = (visible: boolean): ThunkResult<void> => (
+    dispatch
 ) => {
     console.log(`Set agree modal visible = ${visible}`);
     dispatch({ type: AuthTypes.SET_VIDEO_AGREE_VISIBLE, visible });
 };
 
-export const setVideoPlayerModalVisible = (visible: boolean) => (
-    dispatch: AuthDispatch
-) => {
+export const setVideoPlayerModalVisible = (
+    visible: boolean
+): ThunkResult<void> => (dispatch) => {
     dispatch({ type: AuthTypes.SET_VIDEO_PLAYER_VISIBLE, visible });
 };

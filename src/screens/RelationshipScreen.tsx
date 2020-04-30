@@ -37,6 +37,9 @@ import {
     deleteDocError,
     deleteDocSuccess,
 } from '../store/actions';
+import { AuthState } from '../store/reducers/authReducer';
+import ConnectionsLogin from '../components/auth/ConnectionsLogin';
+
 
 const styles = StyleSheet.create({
     topView: {
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
 });
 
 interface StateProps {
-    caseId: number;
+    caseId?: number;
     relationshipId: number;
     relationship?: RelationshipDetailFullFragment;
     isLoading: boolean;
@@ -193,6 +196,7 @@ interface StateProps {
     documentError?: string;
     documentSuccess: boolean;
     documentSuccessID?: number;
+    auth: AuthState;
 }
 
 interface DispatchProps {
@@ -251,7 +255,9 @@ function RelationshipScreen(props: Props): JSX.Element {
     const [newDoc, setNewDoc] = useState(false);
     // get once
     useEffect(() => {
-        props.getRelationship(props.caseId, props.relationshipId);
+        if (props.caseId) {
+            props.getRelationship(props.caseId, props.relationshipId);
+        }
     }, []);
     useEffect(() => {
         if (props.documentSuccess) {
@@ -271,11 +277,16 @@ function RelationshipScreen(props: Props): JSX.Element {
         return props.navigation.navigate('AddEngagementForm', {
             engagementType: type,
             relationshipId: props.relationshipId,
+            relationship: props.relationship,
             caseId: props.caseId,
         } as AddEngagementFormParams);
     };
 
     let scroll: ScrollView | null = null;
+
+    if (!props.auth.isLoggedIn) {
+        return <ConnectionsLogin />;
+    }
 
     return props.isLoading || !props.relationship ? (
         <View style={{ ...styles.topView }}>
@@ -506,7 +517,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                                             </TouchableOpacity>
                                         </View>
                                         <Text style={styles.iconLabel}>
-                                            ADD NOTE
+                                            Add Note
                                         </Text>
                                     </View>
 
@@ -533,7 +544,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                                             </TouchableOpacity>
                                         </View>
                                         <Text style={styles.iconLabel}>
-                                            LOG CALL
+                                            Log Call
                                         </Text>
                                     </View>
 
@@ -553,7 +564,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                                             </TouchableOpacity>
                                         </View>
                                         <Text style={styles.iconLabel}>
-                                            LOG EMAIL
+                                            Log Email
                                         </Text>
                                     </View>
                                 </View>
@@ -705,10 +716,6 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 
     const caseId = state.case.results?.details?.id;
 
-    if (!caseId) {
-        throw new Error('Case id not specified');
-    }
-
     // engagements are at the case level. Filter to ones relevant
     // to this relationship/connection
     const engagements =
@@ -733,6 +740,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
         documentError,
         documentSuccessID,
         documentSuccess,
+        auth: state.auth,
     };
 };
 
