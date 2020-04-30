@@ -257,7 +257,7 @@ function RelationshipScreen(props: Props): JSX.Element {
         if (props.documentSuccess) {
             setTimeout(() => {
                 props.deleteDocSuccess();
-            }, 3000);
+            }, 1600);
         }
     }, [props.documentSuccess]);
 

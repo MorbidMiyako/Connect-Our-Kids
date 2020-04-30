@@ -151,7 +151,7 @@ export const Documents = (props: DocumentsProps): JSX.Element => {
         // Will change fadeAnim value to 1 in 5 seconds
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 3000,
+            duration: 1600,
             useNativeDriver: false,
         }).start();
     };
