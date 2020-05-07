@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white',
     },
 
     saveButton: {
@@ -74,22 +75,28 @@ const styles = StyleSheet.create({
     subjectFormEmail: {
         minHeight: 25,
         marginBottom: 5,
-        width: '100%',
+        width: '93%',
         backgroundColor: 'white',
+        borderRadius: 4,
+    },
+    subject: {
+        padding: 4,
+        fontSize: 15,
+        backgroundColor: '#FAFAFA',
         borderRadius: 4,
     },
     engagementForm: {
         height: 270,
         marginBottom: 5,
-        width: '100%',
-        backgroundColor: 'white',
+        width: '93%',
+        backgroundColor: '#FAFAFA',
         borderRadius: 4,
     },
     containerStyle: {
         width: '100%',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#E5E4E2',
+        backgroundColor: 'white',
         height: '100%',
     },
     avatarName: {
@@ -249,7 +256,7 @@ const AddEngagementForm = (props: Props) => {
                             }}
                             placeholder="Subject"
                             placeholderTextColor={'#AAA9AD'}
-                            style={{ padding: 4, fontSize: 15 }}
+                            style={styles.subject}
                             textAlignVertical="top"
                             value={subject}
                         />
@@ -272,7 +279,7 @@ const AddEngagementForm = (props: Props) => {
                         placeholder={dataTypePlaceholder(props.engagementType)}
                         placeholderTextColor={'#AAA9AD'}
                         style={{
-                            padding: 10,
+                            padding: 5,
                             width: '100%',
                             height: '100%',
                             fontSize: 15,
@@ -322,8 +329,6 @@ const AddEngagementForm = (props: Props) => {
                         >
                             <View style={styles.modal}>
                                 <Text>Adding Engagement...</Text>
-                            </View>
-                            <View>
                                 <Loader />
                             </View>
                         </Modal>

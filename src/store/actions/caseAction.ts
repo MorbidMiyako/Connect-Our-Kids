@@ -264,14 +264,14 @@ export const createDocEngagement = (
         );
 };
 
-export const deleteDocSuccess = () => (dispatch: CaseDispatch): void => {
+export const docClearSuccess = () => (dispatch: CaseDispatch): void => {
     //new document back to false
     dispatch({
         type: CaseTypes.CLEAR_DOCUMENT_SUCCESS,
     });
 };
 
-export const deleteDocError = () => (dispatch: CaseDispatch): void => {
+export const docClearError = () => (dispatch: CaseDispatch): void => {
     //resets document error to undefined
     dispatch({
         type: CaseTypes.CLEAR_DOCUMENT_ERROR,

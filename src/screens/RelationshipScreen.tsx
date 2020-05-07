@@ -34,12 +34,11 @@ import PickPhotoButton from '../components/family-connections/AddDocumentButtons
 import TakePhotoButton from '../components/family-connections/AddDocumentButtons/TakePhotoButton';
 import {
     createDocEngagement,
-    deleteDocError,
-    deleteDocSuccess,
+    docClearError,
+    docClearSuccess,
 } from '../store/actions';
 import { AuthState } from '../store/reducers/authReducer';
 import ConnectionsLogin from '../components/auth/ConnectionsLogin';
-
 
 const styles = StyleSheet.create({
     topView: {
@@ -202,8 +201,8 @@ interface StateProps {
 interface DispatchProps {
     getRelationship: typeof getRelationship;
     createDocEngagement: typeof createDocEngagement;
-    deleteDocError: typeof deleteDocError;
-    deleteDocSuccess: typeof deleteDocSuccess;
+    docClearError: typeof docClearError;
+    docClearSuccess: typeof docClearSuccess;
 }
 
 type Navigation = NavigationScreenProp<NavigationState>;
@@ -252,8 +251,6 @@ function RelationshipScreen(props: Props): JSX.Element {
     });
     const [options] = useState({ x: 0, y: 0, animated: true }); // used as landing coordinates for scroll to top
     const [isScrolling, setIsScrolling] = useState(false);
-    const [newDoc, setNewDoc] = useState(false);
-    // get once
     useEffect(() => {
         if (props.caseId) {
             props.getRelationship(props.caseId, props.relationshipId);
@@ -262,7 +259,7 @@ function RelationshipScreen(props: Props): JSX.Element {
     useEffect(() => {
         if (props.documentSuccess) {
             setTimeout(() => {
-                props.deleteDocSuccess();
+                props.docClearSuccess();
             }, 1600);
         }
     }, [props.documentSuccess]);
@@ -609,7 +606,7 @@ function RelationshipScreen(props: Props): JSX.Element {
                                     <ErrorModal
                                         error={props.documentError}
                                         dismissModal={() =>
-                                            props.deleteDocError()
+                                            props.docClearError()
                                         }
                                     />
                                 )}
@@ -747,6 +744,6 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, {
     getRelationship,
     createDocEngagement,
-    deleteDocError,
-    deleteDocSuccess,
+    docClearError,
+    docClearSuccess,
 })(RelationshipScreen);

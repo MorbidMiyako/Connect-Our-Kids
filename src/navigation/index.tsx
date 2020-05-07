@@ -1,10 +1,6 @@
 import React from 'react';
-import { Image, View, TouchableOpacity, Text, Platform } from 'react-native';
-import {
-    createAppContainer,
-    createSwitchNavigator,
-    NavigationScreenConfig,
-} from 'react-navigation';
+import { Image, View, Platform } from 'react-native';
+import { createAppContainer, NavigationScreenConfig } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,7 +17,6 @@ import logoImg from '../../assets/logo.png';
 import MoreScreen from '../screens/MoreScreen';
 import AddEngagementForm from '../components/family-connections/AddEngagementForm/AddEngagementForm';
 import styles from './styles';
-import AddCaseScreen from '../screens/AddCaseScreen';
 
 // This is the primary NAVIGATION file. Everything in this file determines how to navigate around through the Bottom Navbar and "More" Drawer.
 // If you add new screens into the app, you'll need to add them into the appropriate stacks below in order for React Navigation to know how to route the user.
@@ -45,35 +40,6 @@ const topLevelScreenNavigationOptions: NavigationScreenConfig<
                 source={logoImg}
                 resizeMode="contain"
             />
-        </View>
-    ),
-};
-
-// use this on the top level screen with Add Case Button (Family Connections)
-const topLevelScreenNavigationOptions2: NavigationScreenConfig<
-    Record<string, unknown>,
-    unknown
-> = {
-    headerStyle: {
-        height: constants.headerHeight,
-        backgroundColor: constants.backgroundColor,
-    },
-    // eslint-disable-next-line react/display-name
-    headerTitle: (props) => (
-        <View style={styles.headerStyles}>
-            <Image
-                style={styles.headerImgStyles}
-                source={logoImg}
-                resizeMode="contain"
-            />
-            <TouchableOpacity
-                style={styles.headerBtnView}
-                activeOpacity={0.6}
-                onPress={() => console.log('clicked')}
-            >
-                <Ionicons name="md-add" size={24} color="#0279AC" />
-                <Text style={styles.addCaseText}> Add Case </Text>
-            </TouchableOpacity>
         </View>
     ),
 };
@@ -105,7 +71,6 @@ const subLevelScreenNavigationOptions: NavigationScreenConfig<
 const FamilyConnectionsNavigator = createStackNavigator({
     FamilyConnections: {
         screen: FamilyConnectionsScreen,
-        navigationOptions: topLevelScreenNavigationOptions2,
     },
     CaseView: {
         screen: CaseScreen,
