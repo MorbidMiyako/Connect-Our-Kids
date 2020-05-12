@@ -2,8 +2,6 @@ import { StyleSheet } from 'react-native';
 
 import constants from '../../../helpers/constants';
 
-/**********************************************************/
-
 export default StyleSheet.create({
     scrollView: {
         width: '100%',
@@ -39,7 +37,25 @@ export default StyleSheet.create({
         borderWidth: constants.inputBorderWidth,
         backgroundColor: constants.inputBackgroundColor,
     },
-
+    modal: {
+        margin: 20,
+        marginTop: 180,
+        backgroundColor: 'white',
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 35,
+        alignItems: 'center',
+        alignContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
     header: {
         fontSize: 30,
         fontWeight: 'bold',
