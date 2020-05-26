@@ -10,8 +10,10 @@ import {
     Modal,
 } from 'react-native';
 import { Divider } from 'react-native-elements';
-import { logout, login } from '../store/actions';
-import { connect, useDispatch } from 'react-redux';
+
+import { logout, login, setLogoutModalClosed } from '../store/actions';
+
+import { connect } from 'react-redux';
 import constants from '../helpers/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
         padding: 10,
         width: '50%',
         marginTop: 25,
-        borderRadius: 25,
+        borderRadius: 8,
         alignItems: 'center',
     },
 });
@@ -116,6 +118,7 @@ interface StateProps {
 interface DispatchProps {
     login: typeof login;
     logout: typeof logout;
+    setLogoutModalClosed: typeof setLogoutModalClosed;
 }
 
 type Navigation = NavigationScreenProp<NavigationState>;
@@ -131,7 +134,6 @@ const MoreScreen = (props: Props) => {
     useEffect(() => {
         props.login(true);
     }, []);
-    const dispatch = useDispatch();
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -188,6 +190,25 @@ const MoreScreen = (props: Props) => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
+                        style={[styles.linkBox, styles.withBorder]}
+                        onPress={() =>
+                            Linking.openURL(
+                                'https://help.connectourkids.org/en/'
+                            )
+                        }
+                    >
+                        <Ionicons
+                            name="md-help-circle-outline"
+                            size={32}
+                            color="#0279AC"
+                        />
+                        <Text style={[styles.text]}>Help Center</Text>
+                        <MaterialIcons
+                            name={'launch'}
+                            style={styles.launchIcon}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         style={styles.linkBox}
                         onPress={() =>
                             Linking.openURL(
@@ -232,11 +253,11 @@ const MoreScreen = (props: Props) => {
                                             animationType={'fade'}
                                             transparent={true}
                                             visible={props.auth.loggedOutfail}
-                                            onRequestClose={() => {
-                                                console.log(
-                                                    'Modal has been closed.'
-                                                );
-                                            }}
+                                            // onRequestClose={() => {
+                                            //     console.log(
+                                            //         'Modal has been closed.'
+                                            //     );
+                                            // }}
                                         >
                                             <View style={styles.modal}>
                                                 <Text>
@@ -245,10 +266,7 @@ const MoreScreen = (props: Props) => {
                                                 <TouchableOpacity
                                                     style={styles.saveButton}
                                                     onPress={() => {
-                                                        dispatch({
-                                                            type:
-                                                                'LOG_OUT_MODAL_CLOSED',
-                                                        });
+                                                        props.setLogoutModalClosed();
                                                     }}
                                                 >
                                                     <Text
@@ -274,18 +292,16 @@ const MoreScreen = (props: Props) => {
                                 animationType={'fade'}
                                 transparent={true}
                                 visible={props.auth.loggedOutSuccess}
-                                onRequestClose={() => {
-                                    console.log('Modal has been closed.');
-                                }}
+                                // onRequestClose={() => {
+                                //     console.log('Modal has been closed.');
+                                // }}
                             >
                                 <View style={styles.modal}>
                                     <Text>Successfully logged out!</Text>
                                     <TouchableOpacity
                                         style={styles.saveButton}
                                         onPress={() => {
-                                            dispatch({
-                                                type: 'LOG_OUT_MODAL_CLOSED',
-                                            });
+                                            props.setLogoutModalClosed();
                                         }}
                                     >
                                         <Text style={styles.modalText}>
@@ -311,4 +327,5 @@ const mapStateToProps = (state: RootState) => {
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, {
     login,
     logout,
+    setLogoutModalClosed,
 })(MoreScreen);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Text,
     View,
@@ -7,18 +7,14 @@ import {
     Linking,
     Platform,
 } from 'react-native';
-import EditDetailsForm from '../EditDetailsForm';
 import { RelationshipDetailFullFragment } from '../../../generated/RelationshipDetailFullFragment';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function ConnectionsDetailsView({
     details,
-    relationshipId,
 }: {
     details: RelationshipDetailFullFragment;
-    relationshipId: number;
 }): JSX.Element {
-    const [edit, setEdit] = useState(false);
-
     const styles = StyleSheet.create({
         rootView: {
             display: 'flex',
@@ -92,12 +88,6 @@ export default function ConnectionsDetailsView({
             paddingTop: 2,
             color: '#444444',
         },
-        edit: {
-            color: '#0279AC',
-            paddingTop: 20,
-            paddingRight: 5,
-            textAlign: 'right',
-        },
     });
 
     const teleFormat = (phoneNumber: string): string => {
@@ -119,7 +109,7 @@ export default function ConnectionsDetailsView({
         }
     };
 
-    return edit === false ? (
+    return (
         <View style={styles.rootView}>
             {/* TODO. Commented out editing until it is updated for GraphQL backend
              <Text
@@ -178,7 +168,9 @@ export default function ConnectionsDetailsView({
                     <View style={styles.textView}>
                         <Text style={styles.labelText}>Gender</Text>
                         <Text style={styles.contentText}>
-                            {details.person.gender}
+                            {details.person.gender === 'Unspecified'
+                                ? null
+                                : details.person.gender}
                         </Text>
                     </View>
                 ) : null}
@@ -228,7 +220,16 @@ export default function ConnectionsDetailsView({
                                                           }}
                                                       >
                                                           {address.streetNumber}{' '}
-                                                          {address.route}
+                                                          {address.route}{' '}
+                                                          {address.isVerified ? (
+                                                              <AntDesign
+                                                                  name="checkcircle"
+                                                                  size={16}
+                                                                  color="black"
+                                                              />
+                                                          ) : (
+                                                              ''
+                                                          )}
                                                       </Text>
                                                       <Text
                                                           style={{
@@ -281,6 +282,15 @@ export default function ConnectionsDetailsView({
                                                   >
                                                       {teleFormat(
                                                           telephoneObj.telephone
+                                                      )}{' '}
+                                                      {telephoneObj.isVerified ? (
+                                                          <AntDesign
+                                                              name="checkcircle"
+                                                              size={16}
+                                                              color="black"
+                                                          />
+                                                      ) : (
+                                                          ''
                                                       )}
                                                   </Text>
                                               )
@@ -306,7 +316,16 @@ export default function ConnectionsDetailsView({
                                                       )
                                                   }
                                               >
-                                                  {emailObj.email}
+                                                  {emailObj.email}{' '}
+                                                  {emailObj.isVerified ? (
+                                                      <AntDesign
+                                                          name="checkcircle"
+                                                          size={16}
+                                                          color="black"
+                                                      />
+                                                  ) : (
+                                                      ''
+                                                  )}
                                               </Text>
                                           )
                                       )
@@ -350,7 +369,8 @@ export default function ConnectionsDetailsView({
                         <Text style={styles.headerText}>SOCIAL MEDIA</Text>
                     </View>
                     <View>
-                        {details.facebook ? (
+                        {details.facebook &&
+                        details.facebook.trim().length > 0 ? (
                             <View style={styles.textView}>
                                 <Text style={styles.labelText}>Facebook</Text>
                                 <Text
@@ -363,7 +383,8 @@ export default function ConnectionsDetailsView({
                                 </Text>
                             </View>
                         ) : null}
-                        {details.linkedin ? (
+                        {details.linkedin &&
+                        details.linkedin.trim().length > 0 ? (
                             <View style={styles.textView}>
                                 <Text style={styles.labelText}>LinkedIn</Text>
                                 <Text
@@ -376,7 +397,8 @@ export default function ConnectionsDetailsView({
                                 </Text>
                             </View>
                         ) : null}
-                        {details.linkedin ? (
+                        {details.twitter &&
+                        details.twitter.trim().length > 0 ? (
                             <View style={styles.textView}>
                                 <Text style={styles.labelText}>Twitter</Text>
                                 <Text
@@ -394,11 +416,5 @@ export default function ConnectionsDetailsView({
             ) : null}
             <View style={{ height: 60 }} />
         </View>
-    ) : (
-        <EditDetailsForm
-            details={details}
-            id={relationshipId}
-            setEdit={setEdit}
-        />
     );
 }
