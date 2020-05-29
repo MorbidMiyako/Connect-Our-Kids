@@ -326,6 +326,17 @@ These contribution guidelines have been adapted from [this good `Contributing.md
 
 ## Contributors
 
+### Lambda Labs 23
+
+| Avatar                                                                                                                     | Name                                                | Role      |
+| :------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------- | :-------- |
+| ![Anna Franceschi](https://avatars3.githubusercontent.com/u/40441965?s=460&u=fd23fe2f4191b58148af21b7eaacaa957917ed8f&v=4) | [Anna Franceschi](https://github.com/bamfranceschi) | Team Lead |
+| ![Brandy Becker](https://avatars2.githubusercontent.com/u/52930131?s=460&u=9e967082f9299e499214b87757e31c21d2aaab93&v=4)   | [Brandy Becker](https://github.com/brandybecker)    | Developer |
+| ![Allen Do](https://avatars2.githubusercontent.com/u/57642471?s=460&u=2740139954e8e1c8c1edfb7fa17be13e3d6c7e76&v=4)        | [Allen Do](https://github.com/immxalan)             | Developer |
+| ![Bernd de Kruik](https://avatars2.githubusercontent.com/u/57117884?s=460&u=36ec0b2ffb92f78e303b0b2849c70cc95a54c4cc&v=4)  | [Bernd de Kruik](https://github.com/MorbidMiyako)   | Developer |
+| ![Richard Lynch](https://avatars2.githubusercontent.com/u/57117884?s=460&u=36ec0b2ffb92f78e303b0b2849c70cc95a54c4cc&v=4)   | [Richard Lynch](https://github.com/richknicks)      | Developer |
+| ![Marco Whyte](https://avatars3.githubusercontent.com/u/39717954?s=460&u=ff2e3b7f0941b4ee75c6df8aecf83b384829b80f&v=4)     | [Marco Whyte](https://github.com/marwhyte)          | Developer |
+
 ### Lambda Labs 21
 
 | Avatar                                                                          | Name                                                       | Role      |
